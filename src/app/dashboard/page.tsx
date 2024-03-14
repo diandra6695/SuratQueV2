@@ -77,7 +77,9 @@ const Dashboard = () => {
                 <TableBody>
                   <TableRow>
                     <TableCell className="font-medium">1</TableCell>
-                    <TableCell>Surat Peminjaman barang</TableCell>
+                    <TableCell>
+                      Sepatu, sepatu apa yang bisa buat masak?
+                    </TableCell>
                     <TableCell>29/02/2024</TableCell>
                     <TableCell>
                       <Dropdown />
@@ -86,7 +88,7 @@ const Dashboard = () => {
                 </TableBody>
               </Table>
             </div>
-            <h1>Dashboard</h1>
+            <h1>sepatula.... HAHAHAHA</h1>
           </Card>
         </DashboardLayout>
       </div>
