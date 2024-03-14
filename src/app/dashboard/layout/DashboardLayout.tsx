@@ -1,4 +1,5 @@
 "use client";
+import useUser from "@/app/auth/hook/useUser";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -18,16 +19,25 @@ export default function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const { isFetching, data } = useUser();
+
+  if (isFetching)
+    return (
+      <div className="min-h-screen w-full flex justify-center items-center">
+        <div className="loader"></div>
+      </div>
+    );
+
   return (
     <section>
       <div className="sidebar">
         <nav className="h-[4rem] flex items-center px-10 justify-end w-full border fixed gap-5 z-20 bg-white">
-          <h3>Halo, tefa</h3>
+          <h3>Halo, {data?.display_name}</h3>
           <DropdownMenu>
             <DropdownMenuTrigger className="after:border-0 focus:border-0">
               <Avatar>
-                <AvatarImage src="https://github.com/shadcn.png" />
-                <AvatarFallback>CN</AvatarFallback>
+                <AvatarImage src={data?.image_url || ""} />
+                <AvatarFallback>{data?.email[0]}</AvatarFallback>
               </Avatar>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
