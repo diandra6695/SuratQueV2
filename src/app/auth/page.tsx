@@ -10,15 +10,18 @@ import {
 import { Input } from "@/components/ui/input";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
+import { useSearchParams } from "next/navigation";
 
 const Page = () => {
+  const params = useSearchParams();
+  const next = params.get("next");
   const handleLoginWithOAuth = (provider: "github" | "google") => {
     const supabase = supabaseBrowser();
 
     supabase.auth.signInWithOAuth({
       provider,
       options: {
-        redirectTo: location.origin + "/auth/callback",
+        redirectTo: location.origin + "/auth/callback?next=" + next,
       },
     });
   };
