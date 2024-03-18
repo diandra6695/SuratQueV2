@@ -1,18 +1,21 @@
 import { Button } from "@/components/ui/button";
 import { House, Plus, User } from "@phosphor-icons/react";
 import Image from "next/image";
+import Link from "next/link";
 
 const SidebarDashboard = () => {
   return (
     <div className="lg:w-[25rem] xl:w-[18rem]">
       <div className="w-[18rem] fixed z-20 h-screen bg-white border p-5">
-        <Image
-          className="pointer-events-none mb-5 w-[8rem]"
-          src="/assets/images/logo/logo.svg"
-          alt="logo"
-          width={100}
-          height={100}
-        />
+        <Link href="/">
+          <Image
+            className="pointer-events-none mb-5 w-[8rem]"
+            src="/assets/images/logo/logo.svg"
+            alt="logo"
+            width={100}
+            height={100}
+          />
+        </Link>
         <Button className="w-full flex gap-2 mb-5">
           <Plus size={20} weight="bold" />
           <h3>Surat Baru</h3>
