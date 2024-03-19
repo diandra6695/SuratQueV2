@@ -9,6 +9,7 @@ const QueryProvider = ({ children }: { children: React.ReactNode }) => {
         defaultOptions: {
           queries: {
             staleTime: Infinity,
+            refetchOnWindowFocus: false,
           },
         },
       })

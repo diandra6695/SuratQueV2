@@ -5,7 +5,7 @@ import Link from "next/link";
 
 const SidebarDashboard = () => {
   return (
-    <div className="lg:w-[25rem] xl:w-[18rem]">
+    <div className="w-[24rem]">
       <div className="w-[18rem] fixed z-20 h-screen bg-white border p-5">
         <Link href="/">
           <Image
@@ -16,10 +16,6 @@ const SidebarDashboard = () => {
             height={100}
           />
         </Link>
-        <Button className="w-full flex gap-2 mb-5">
-          <Plus size={20} weight="bold" />
-          <h3>Surat Baru</h3>
-        </Button>
         <div className="">
           <ul className="flex flex-col gap-2">
             <li>
