@@ -18,7 +18,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PencilSimpleLine, TrashSimple } from "@phosphor-icons/react";
+import { PencilSimpleLine, Plus, TrashSimple } from "@phosphor-icons/react";
+import { useFetchPosts } from "@/features/post/useFetchPosts";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import { Label } from "@/components/ui/label";
+import { useFormik } from "formik";
 
 const Dropdown = () => {
   return (
@@ -47,6 +60,39 @@ const Dropdown = () => {
 };
 
 const Dashboard = () => {
+  const { data, isLoading } = useFetchPosts();
+
+  const formik = useFormik({
+    initialValues: {
+      title: "",
+      content: "",
+    },
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const handleFormInput = (e: any) => {
+    const { name, value } = e.target;
+    formik.setFieldValue(name, value);
+  };
+
+  const renderProduct = () => {
+    return data?.data?.posts.map((post: any) => {
+      return (
+        <TableRow key={post.id.toString()}>
+          <TableCell className="font-medium">{post.id}</TableCell>
+          <TableCell>{post.title}</TableCell>
+          <TableCell>{post.content}</TableCell>
+          <TableCell>{post.createdAt}</TableCell>
+          <TableCell>
+            <Dropdown />
+          </TableCell>
+        </TableRow>
+      );
+    });
+  };
+
   return (
     <div className="">
       <div className="">
@@ -54,16 +100,50 @@ const Dashboard = () => {
           <Card className="w-full p-5">
             <div className="flex justify-between mb-5">
               <Input placeholder="Cari Surat" className="max-w-sm" />
-              <DropdownMenu>
-                <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="ml-auto">
-                    Columns <ChevronDown className="ml-2 h-4 w-4" />
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button className="flex gap-2 mb-5 text-sm">
+                    <Plus size={20} weight="bold" />
+                    <h3>Surat Baru</h3>
                   </Button>
-                </DropdownMenuTrigger>
-                <DropdownMenuContent align="end">
-                  <DropdownMenuItem>test</DropdownMenuItem>
-                </DropdownMenuContent>
-              </DropdownMenu>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <form onSubmit={formik.handleSubmit}>
+                    <DialogHeader>
+                      <DialogTitle>Tambah Post</DialogTitle>
+                      <DialogDescription>
+                        Make changes to your profile here. Click save when youre
+                        done.
+                      </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="name" className="text-right">
+                          Title
+                        </Label>
+                        <Input
+                          name="title"
+                          onChange={handleFormInput}
+                          className="col-span-3"
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="username" className="text-right">
+                          Content
+                        </Label>
+                        <Input
+                          name="content"
+                          onChange={handleFormInput}
+                          className="col-span-3"
+                        />
+                      </div>
+                    </div>
+                    <DialogFooter>
+                      <Button type="submit">Save changes</Button>
+                    </DialogFooter>
+                  </form>
+                </DialogContent>
+              </Dialog>
             </div>
             <div className="rounded-md border">
               <Table>
@@ -71,24 +151,16 @@ const Dashboard = () => {
                   <TableRow>
                     <TableHead>No</TableHead>
                     <TableHead>Jenis</TableHead>
+                    <TableHead>Content</TableHead>
                     <TableHead>Tanggal Pembuatan</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  <TableRow>
-                    <TableCell className="font-medium">1</TableCell>
-                    <TableCell>
-                      Sepatu, sepatu apa yang bisa buat masak?
-                    </TableCell>
-                    <TableCell>29/02/2024</TableCell>
-                    <TableCell>
-                      <Dropdown />
-                    </TableCell>
-                  </TableRow>
+                  {renderProduct()}
+                  {isLoading && <p>Loading</p>}
                 </TableBody>
               </Table>
             </div>
-            <h1>sepatula.... HAHAHAHA</h1>
           </Card>
         </DashboardLayout>
       </div>
