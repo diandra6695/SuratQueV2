@@ -9,7 +9,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, MoreHorizontal } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -29,11 +29,39 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { AlertDialogHeader } from "@/components/ui/alert-dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
+import { useMutation } from "@tanstack/react-query";
+import { axiosInstance } from "@/lib/axios";
+import { useToast } from "@/components/ui/use-toast";
+import { useState } from "react";
+import { useCreatePost } from "@/features/post/useCreatePost";
+import { useDeletePost } from "@/features/post/useDeletePost";
 
-const Dropdown = () => {
+const Dropdown = ({ id }: any) => {
+  const { toast } = useToast();
+  const { refetch: refetchProduct } = useFetchPosts();
+  const { mutate: deletePost } = useDeletePost({
+    onSuccess: () => {
+      refetchProduct();
+      toast({
+        title: "delete post successfully",
+        description:
+          "jangan nyesel kalo datanya kehapus, apalagi kenangannya :)",
+      });
+    },
+  });
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
@@ -46,10 +74,29 @@ const Dropdown = () => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuItem className="flex gap-2">
-          <TrashSimple size={18} weight="bold" />
-          Hapus
-        </DropdownMenuItem>
+        <AlertDialog>
+          <AlertDialogTrigger asChild>
+            <Button>
+              <TrashSimple size={18} weight="bold" />
+              Hapus
+            </Button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogDescription>
+                This action cannot be undone. This will permanently delete your
+                post and remove your data from our servers.
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction>
+                <Button onClick={() => deletePost(id)}>Delete</Button>
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
         <DropdownMenuItem className="flex gap-2">
           <PencilSimpleLine size={18} weight="bold" />
           Ganti Nama
@@ -60,15 +107,44 @@ const Dropdown = () => {
 };
 
 const Dashboard = () => {
-  const { data, isLoading } = useFetchPosts();
+  const [open, setOpen] = useState(false);
+  const { toast } = useToast();
+  const {
+    data,
+    isLoading: postIsLoading,
+    refetch: refetchProduct,
+  } = useFetchPosts();
+  const { mutate: createPost, isPending: createPostIsLoading } = useCreatePost({
+    onSuccess: () => {
+      refetchProduct();
+      setOpen(false);
+      toast({
+        title: "Sucess",
+        description: "Surat Berhasil disimpan",
+      });
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
       title: "",
       content: "",
     },
-    onSubmit: (values) => {
-      console.log(values);
+    onSubmit: async () => {
+      const { title, content } = formik.values;
+      createPost({
+        title,
+        content,
+      });
+      formik.resetForm();
+    },
+  });
+
+  const { mutate: deletePost } = useMutation({
+    mutationFn: async (id) => {
+      const productsResponse = await axiosInstance.delete(`/post/${id}`);
+
+      return productsResponse;
     },
   });
 
@@ -86,7 +162,7 @@ const Dashboard = () => {
           <TableCell>{post.content}</TableCell>
           <TableCell>{post.createdAt}</TableCell>
           <TableCell>
-            <Dropdown />
+            <Dropdown id={post.id} />
           </TableCell>
         </TableRow>
       );
@@ -100,7 +176,7 @@ const Dashboard = () => {
           <Card className="w-full p-5">
             <div className="flex justify-between mb-5">
               <Input placeholder="Cari Surat" className="max-w-sm" />
-              <Dialog>
+              <Dialog open={open} onOpenChange={setOpen}>
                 <DialogTrigger asChild>
                   <Button className="flex gap-2 mb-5 text-sm">
                     <Plus size={20} weight="bold" />
@@ -125,6 +201,7 @@ const Dashboard = () => {
                           name="title"
                           onChange={handleFormInput}
                           className="col-span-3"
+                          value={formik.values.title}
                         />
                       </div>
                       <div className="grid grid-cols-4 items-center gap-4">
@@ -135,11 +212,16 @@ const Dashboard = () => {
                           name="content"
                           onChange={handleFormInput}
                           className="col-span-3"
+                          value={formik.values.content}
                         />
                       </div>
                     </div>
                     <DialogFooter>
-                      <Button type="submit">Save changes</Button>
+                      {createPostIsLoading ? (
+                        <Button disabled>Please wait</Button>
+                      ) : (
+                        <Button type="submit">Save changes</Button>
+                      )}
                     </DialogFooter>
                   </form>
                 </DialogContent>
@@ -157,7 +239,7 @@ const Dashboard = () => {
                 </TableHeader>
                 <TableBody>
                   {renderProduct()}
-                  {isLoading && <p>Loading</p>}
+                  {postIsLoading && <p>Loading</p>}
                 </TableBody>
               </Table>
             </div>
