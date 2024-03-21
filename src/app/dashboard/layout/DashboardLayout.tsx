@@ -24,7 +24,7 @@ export default function DashboardLayout({
     <section>
       <div className="sidebar">
         <NavbarDashboard data={data} />
-        <div className="flex bg-violet-50">
+        <div className="flex bg-white">
           <SidebarDashboard />
           <div className="mt-24 container min-h-screen mx-auto z-10 w-full">
             {children}

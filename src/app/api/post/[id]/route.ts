@@ -34,3 +34,24 @@ export const DELETE = async (
 
   return NextResponse.json({ message: "Post deleted" }, { status: 200 });
 };
+
+export const PATCH = async (
+  req: NextRequest,
+  context: { params: { id: string } }
+) => {
+  const id = Number(context.params.id) || 0;
+
+  const { title, content } = await req.json();
+
+  const post = await prisma.post.update({
+    where: {
+      id: Number(id),
+    },
+    data: {
+      title,
+      content,
+    },
+  });
+
+  return NextResponse.json({ post });
+};
