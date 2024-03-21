@@ -44,71 +44,15 @@ import { Label } from "@/components/ui/label";
 import { useFormik } from "formik";
 import { useMutation } from "@tanstack/react-query";
 import { axiosInstance } from "@/lib/axios";
-import { useToast } from "@/components/ui/use-toast";
+// import { useToast } from "@/components/ui/use-toast";
 import { useState } from "react";
 import { useCreatePost } from "@/features/post/useCreatePost";
 import { useDeletePost } from "@/features/post/useDeletePost";
-
-const Dropdown = ({ id }: any) => {
-  const { toast } = useToast();
-  const { refetch: refetchProduct } = useFetchPosts();
-  const { mutate: deletePost } = useDeletePost({
-    onSuccess: () => {
-      refetchProduct();
-      toast({
-        title: "delete post successfully",
-        description:
-          "jangan nyesel kalo datanya kehapus, apalagi kenangannya :)",
-      });
-    },
-  });
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger
-        asChild
-        className="after:border-none focus:border-none border-none"
-      >
-        <Button variant="ghost" className="h-8 w-8 p-0">
-          <span className="sr-only">Open menu</span>
-          <MoreHorizontal className="h-4 w-4" />
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button>
-              <TrashSimple size={18} weight="bold" />
-              Hapus
-            </Button>
-          </AlertDialogTrigger>
-          <AlertDialogContent>
-            <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                post and remove your data from our servers.
-              </AlertDialogDescription>
-            </AlertDialogHeader>
-            <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction>
-                <Button onClick={() => deletePost(id)}>Delete</Button>
-              </AlertDialogAction>
-            </AlertDialogFooter>
-          </AlertDialogContent>
-        </AlertDialog>
-        <DropdownMenuItem className="flex gap-2">
-          <PencilSimpleLine size={18} weight="bold" />
-          Ganti Nama
-        </DropdownMenuItem>
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-};
+import { toast } from "sonner";
+import { useUpdatePost } from "@/features/post/useUpdatePost";
 
 const Dashboard = () => {
   const [open, setOpen] = useState(false);
-  const { toast } = useToast();
   const {
     data,
     isLoading: postIsLoading,
@@ -118,10 +62,28 @@ const Dashboard = () => {
     onSuccess: () => {
       refetchProduct();
       setOpen(false);
-      toast({
-        title: "Sucess",
+      toast("Sucess", {
         description: "Surat Berhasil disimpan",
       });
+    },
+  });
+  const { mutate: deletePost } = useDeletePost({
+    onSuccess: () => {
+      refetchProduct();
+      toast("Sucess", {
+        description: "Surat Berhasil dihapus",
+      });
+    },
+  });
+
+  const { mutate: editPost, isPending: editPostIsLoading } = useUpdatePost({
+    onSuccess: () => {
+      refetchProduct();
+      setOpen(false);
+      toast("Sucess", {
+        description: "Surat Berhasil diedit",
+      });
+      formik.resetForm();
     },
   });
 
@@ -129,28 +91,88 @@ const Dashboard = () => {
     initialValues: {
       title: "",
       content: "",
+      id: 0,
     },
     onSubmit: async () => {
-      const { title, content } = formik.values;
-      createPost({
-        title,
-        content,
-      });
-      formik.resetForm();
-    },
-  });
-
-  const { mutate: deletePost } = useMutation({
-    mutationFn: async (id) => {
-      const productsResponse = await axiosInstance.delete(`/post/${id}`);
-
-      return productsResponse;
+      const { title, content, id } = formik.values;
+      if (!title || !content) {
+        toast("Error", {
+          description: "Data harus diisi.",
+        });
+        return;
+      }
+      if (id) {
+        editPost({
+          title,
+          content,
+          id,
+        });
+      } else {
+        createPost({
+          title,
+          content,
+        });
+        formik.resetForm();
+      }
     },
   });
 
   const handleFormInput = (e: any) => {
     const { name, value } = e.target;
     formik.setFieldValue(name, value);
+  };
+
+  const onEditClick = (post: any) => {
+    formik.setFieldValue("title", post.title);
+    formik.setFieldValue("content", post.content);
+    formik.setFieldValue("id", post.id);
+  };
+
+  const Dropdown = ({ post }: any) => {
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          asChild
+          className="after:border-none focus:border-none border-none"
+        >
+          <Button variant="ghost" className="h-8 w-8 p-0">
+            <span className="sr-only">Open menu</span>
+            <MoreHorizontal className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="end">
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Button>
+                <TrashSimple size={18} weight="bold" />
+                Hapus
+              </Button>
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete
+                  your post and remove your data from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction>
+                  <Button onClick={() => deletePost(post.id)}>Delete</Button>
+                </AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+          <DialogTrigger asChild>
+            <Button onClick={() => onEditClick(post)} className="">
+              <PencilSimpleLine size={18} weight="bold" />
+              Ganti Nama
+            </Button>
+          </DialogTrigger>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
   };
 
   const renderProduct = () => {
@@ -162,7 +184,7 @@ const Dashboard = () => {
           <TableCell>{post.content}</TableCell>
           <TableCell>{post.createdAt}</TableCell>
           <TableCell>
-            <Dropdown id={post.id} />
+            <Dropdown post={post} />
           </TableCell>
         </TableRow>
       );
@@ -173,10 +195,10 @@ const Dashboard = () => {
     <div className="">
       <div className="">
         <DashboardLayout>
-          <Card className="w-full p-5">
-            <div className="flex justify-between mb-5">
-              <Input placeholder="Cari Surat" className="max-w-sm" />
-              <Dialog open={open} onOpenChange={setOpen}>
+          <Dialog open={open} onOpenChange={setOpen}>
+            <Card className="w-full p-5 mb-5">
+              <div className="flex justify-between mb-5">
+                <Input placeholder="Cari Surat" className="max-w-sm" />
                 <DialogTrigger asChild>
                   <Button className="flex gap-2 mb-5 text-sm">
                     <Plus size={20} weight="bold" />
@@ -217,7 +239,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                     <DialogFooter>
-                      {createPostIsLoading ? (
+                      {createPostIsLoading || editPostIsLoading ? (
                         <Button disabled>Please wait</Button>
                       ) : (
                         <Button type="submit">Save changes</Button>
@@ -225,25 +247,25 @@ const Dashboard = () => {
                     </DialogFooter>
                   </form>
                 </DialogContent>
-              </Dialog>
-            </div>
-            <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>No</TableHead>
-                    <TableHead>Jenis</TableHead>
-                    <TableHead>Content</TableHead>
-                    <TableHead>Tanggal Pembuatan</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {renderProduct()}
-                  {postIsLoading && <p>Loading</p>}
-                </TableBody>
-              </Table>
-            </div>
-          </Card>
+              </div>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow className="w-full">
+                      <TableHead>No</TableHead>
+                      <TableHead>Jenis</TableHead>
+                      <TableHead>Content</TableHead>
+                      <TableHead>Tanggal Pembuatan</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {renderProduct()}
+                    {postIsLoading && <p>Loading</p>}
+                  </TableBody>
+                </Table>
+              </div>
+            </Card>
+          </Dialog>
         </DashboardLayout>
       </div>
     </div>
