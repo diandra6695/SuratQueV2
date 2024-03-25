@@ -18,6 +18,7 @@ model Post {
   title     String   @db.VarChar(255)
   content   String?
   published Boolean  @default(true)
+  file      String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
