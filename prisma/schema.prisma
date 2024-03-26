@@ -22,3 +22,41 @@ model Post {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
+
+model User {
+  id           Int            @id @default(autoincrement())
+  id_unique    String         @default(uuid())
+  username     String
+  email        String         @unique
+  avatar       String
+  organization Organization[]
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
+model Organization {
+  id                Int      @id @default(autoincrement())
+  name              String
+  type_organization String
+  user              User     @relation(fields: [user_id], references: [id])
+  user_id           Int
+  surat             Surat[]
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+}
+
+model Surat {
+  id              Int          @id @default(autoincrement())
+  no_surat        String
+  jenis_surat     String
+  tanggal_surat   String
+  tanggal_terima  DateTime     @default(now())
+  perihal         String
+  organisasi      String
+  pengirim        String?
+  file            String
+  organization    Organization @relation(fields: [organization_id], references: [id], onDelete: Cascade)
+  organization_id Int
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+}
