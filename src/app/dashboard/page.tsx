@@ -18,7 +18,12 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { PencilSimpleLine, Plus, TrashSimple } from "@phosphor-icons/react";
+import {
+  FilePdf,
+  PencilSimpleLine,
+  Plus,
+  TrashSimple,
+} from "@phosphor-icons/react";
 import { useFetchPosts } from "@/features/post/useFetchPosts";
 import {
   Dialog,
@@ -50,8 +55,15 @@ import { useCreatePost } from "@/features/post/useCreatePost";
 import { useDeletePost } from "@/features/post/useDeletePost";
 import { toast } from "sonner";
 import { useUpdatePost } from "@/features/post/useUpdatePost";
+import upload from "./utils";
+import useUser from "../auth/hook/useUser";
+import Link from "next/link";
 
 const Dashboard = () => {
+  const user = useUser();
+  const userName = user.data?.display_name;
+
+  const [file, setFile]: any = useState<File>();
   const [open, setOpen] = useState(false);
   const {
     data,
@@ -67,7 +79,7 @@ const Dashboard = () => {
       });
     },
   });
-  const { mutate: deletePost } = useDeletePost({
+  const { mutate: deletePost, isPending: deletePostIsLoading } = useDeletePost({
     onSuccess: () => {
       refetchProduct();
       toast("Sucess", {
@@ -95,9 +107,23 @@ const Dashboard = () => {
     },
     onSubmit: async () => {
       const { title, content, id } = formik.values;
+
       if (!title || !content) {
         toast("Error", {
           description: "Data harus diisi.",
+        });
+        return;
+      }
+      const fileData = new FormData();
+      fileData.set("file", file);
+      let uploadedFileName;
+      try {
+        const result = await upload(fileData, userName);
+        uploadedFileName = result.fileName;
+        console.log(uploadedFileName);
+      } catch (error: any) {
+        toast("Error", {
+          description: error.message,
         });
         return;
       }
@@ -111,7 +137,9 @@ const Dashboard = () => {
         createPost({
           title,
           content,
+          file: uploadedFileName,
         });
+        setFile(false);
         formik.resetForm();
       }
     },
@@ -159,7 +187,11 @@ const Dashboard = () => {
               <AlertDialogFooter>
                 <AlertDialogCancel>Cancel</AlertDialogCancel>
                 <AlertDialogAction>
-                  <Button onClick={() => deletePost(post.id)}>Delete</Button>
+                  {deletePostIsLoading ? (
+                    <Button disabled>Please wait</Button>
+                  ) : (
+                    <Button onClick={() => deletePost(post.id)}>Delete</Button>
+                  )}
                 </AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
@@ -183,6 +215,11 @@ const Dashboard = () => {
           <TableCell>{post.title}</TableCell>
           <TableCell>{post.content}</TableCell>
           <TableCell>{post.createdAt}</TableCell>
+          <TableCell>
+            <Link href={`/uploads/${post.file}`}>
+              <FilePdf size={28} weight="light" />
+            </Link>
+          </TableCell>
           <TableCell>
             <Dropdown post={post} />
           </TableCell>
@@ -235,6 +272,17 @@ const Dashboard = () => {
                           onChange={handleFormInput}
                           className="col-span-3"
                           value={formik.values.content}
+                        />
+                      </div>
+                      <div className="grid grid-cols-4 items-center gap-4">
+                        <Label htmlFor="username" className="text-right">
+                          File
+                        </Label>
+                        <Input
+                          type="file"
+                          name="file"
+                          onChange={(e) => setFile(e.target.files?.[0])}
+                          className="col-span-3"
                         />
                       </div>
                     </div>
