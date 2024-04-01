@@ -18,7 +18,7 @@ const NavbarDashboard = ({ data }: { data: any }) => {
     const supabase = supabaseBrowser();
     queryClient.clear();
     await supabase.auth.signOut();
-    router.push("/auth");
+    router.push("/");
   };
   return (
     <nav className="h-[4rem] flex items-center px-10 justify-end w-full border fixed gap-5 z-20 bg-white">

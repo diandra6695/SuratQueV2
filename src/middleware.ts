@@ -66,7 +66,7 @@ export async function middleware(request: NextRequest) {
   } else {
     if (protectedPaths.includes(url.pathname)) {
       return NextResponse.redirect(
-        new URL("/auth?next=" + url.pathname, request.url)
+        new URL("/auth/signin?next=" + url.pathname, request.url)
       );
     }
   }

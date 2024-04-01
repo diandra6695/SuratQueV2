@@ -11,9 +11,11 @@ import { Input } from "@/components/ui/input";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useFormik } from "formik";
-import { useSearchParams } from "next/navigation";
+import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 
 const Page = () => {
+  const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next");
 
@@ -25,13 +27,11 @@ const Page = () => {
     onSubmit: async () => {
       const { email, password } = formik.values;
       const supabase = supabaseBrowser();
-      await supabase.auth.signUp({
+      await supabase.auth.signInWithPassword({
         email,
         password,
-        options: {
-          emailRedirectTo: location.origin + "/auth/callback?next=" + next,
-        },
       });
+      router.push("/dashboard");
     },
   });
 
@@ -51,10 +51,10 @@ const Page = () => {
   };
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
-      <Card className="w-96">
+      <Card className="w-[28rem]">
         <CardHeader>
-          <CardTitle>Auth</CardTitle>
-          <CardDescription>Sign in with GitHub or Google</CardDescription>
+          <CardTitle>Sign In</CardTitle>
+          <CardDescription>Welcome Back</CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -77,11 +77,21 @@ const Page = () => {
             />
             <Button type="submit" className="w-full">
               <div className="flex gap-2">
-                <p>next</p>
+                <p>Sign In</p>
               </div>
             </Button>
+            <p className="text-sm">
+              <Link href={"/auth/signin"}>
+                <span className="text-primary">Forgot Password</span>
+              </Link>
+            </p>
           </form>
-          <div className="flex flex-col gap-2">
+          <div className="flex mb-5 items-center">
+            <div className="w-full border h-0 border-borderCustom"></div>
+            <p className="text-sm text-center text-neutral-400 p-2">or</p>
+            <div className="w-full border h-0 border-borderCustom"></div>
+          </div>
+          <div className="flex gap-2">
             <Button
               onClick={() => handleLoginWithOAuth("github")}
               type="submit"
@@ -103,6 +113,12 @@ const Page = () => {
               </div>
             </Button>
           </div>
+          <p className="text-sm mt-5 text-center text-neutral-400 p-2">
+            {"Don't"} have an account?{" "}
+            <Link href={"/auth/signup"}>
+              <span className="text-primary">Sign Up</span>
+            </Link>
+          </p>
         </CardContent>
       </Card>
     </div>
