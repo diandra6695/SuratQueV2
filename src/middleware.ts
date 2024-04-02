@@ -59,7 +59,7 @@ export async function middleware(request: NextRequest) {
   const url = new URL(request.url);
 
   if (data.session) {
-    if (url.pathname === "/auth") {
+    if (url.pathname === "/auth/signin" || url.pathname === "/auth/signup") {
       return NextResponse.redirect(new URL("/dashboard", request.url));
     }
     return response;

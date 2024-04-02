@@ -52,7 +52,7 @@ const Page = () => {
   return (
     <div className="w-full min-h-screen flex justify-center items-center">
       <Card className="w-[28rem]">
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>Sign In</CardTitle>
           <CardDescription>Welcome Back</CardDescription>
         </CardHeader>

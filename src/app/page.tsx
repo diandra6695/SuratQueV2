@@ -9,7 +9,7 @@ export default function Home() {
     <div className="w-full h-screen flex justify-center items-center">
       <div className="flex gap-5 justify-center items-center flex-col">
         <h3 className="text-3xl font-semibold">Under Construction</h3>
-        <Link href="/auth">
+        <Link href="/auth/signin">
           <Button className="col-6" variant="default">
             {data?.email ? "dashboard" : "login"}
           </Button>
