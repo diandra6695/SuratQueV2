@@ -13,8 +13,14 @@ import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useFormik } from "formik";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useState } from "react";
 
 const Page = () => {
+  const [signUpError, setSignUpError] = useState<string | null>(null);
+  const [registerWithEmailLoading, setRegisterWithEmailLoading] =
+    useState(false);
+  const [registerWithProviderLoading, setRegisterWithProviderLoading] =
+    useState(false);
   const params = useSearchParams();
   const next = params.get("next");
 
@@ -27,25 +33,58 @@ const Page = () => {
     onSubmit: async () => {
       const { email, password } = formik.values;
       const supabase = supabaseBrowser();
-      await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          emailRedirectTo: location.origin + "/dashboard",
-        },
-      });
+      try {
+        setRegisterWithEmailLoading(true);
+        const { data, error } = await supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            data: {
+              name: formik.values.name,
+            },
+            emailRedirectTo: location.origin + "/dashboard",
+          },
+        });
+
+        let authError = null;
+
+        if (
+          data.user &&
+          data.user.identities &&
+          data.user.identities.length === 0
+        ) {
+          authError = {
+            name: "AuthApiError",
+            message: "User already exists",
+          };
+        } else if (error)
+          authError = {
+            name: error.name,
+            message: error.message,
+          };
+
+        setRegisterWithEmailLoading(false);
+
+        if (authError !== null) {
+          setSignUpError(authError.message);
+          return;
+        }
+      } catch (error) {
+        console.error(error);
+      }
     },
   });
 
   const handleLoginWithOAuth = (provider: "github" | "google") => {
     const supabase = supabaseBrowser();
-
+    setRegisterWithProviderLoading(true);
     supabase.auth.signInWithOAuth({
       provider,
       options: {
         redirectTo: location.origin + "/auth/callback?next=" + next,
       },
     });
+    setRegisterWithProviderLoading(false);
   };
   const handleFormInput = (e: any) => {
     const { name, value } = e.target;
@@ -84,11 +123,18 @@ const Page = () => {
               onChange={handleFormInput}
               value={formik.values.password}
             />
-            <Button type="submit" className="w-full">
-              <div className="flex gap-2">
-                <p>Sign Up</p>
-              </div>
-            </Button>
+            {signUpError && (
+              <p className="text-red-500 text-sm">{signUpError}</p>
+            )}
+            {registerWithEmailLoading ? (
+              <Button disabled>Please wait</Button>
+            ) : (
+              <Button type="submit" className="w-full">
+                <div className="flex gap-2">
+                  <p>Sign Up</p>
+                </div>
+              </Button>
+            )}
             <p className="text-sm">
               Already have an account?{" "}
               <Link href={"/auth/signin"}>
@@ -102,26 +148,44 @@ const Page = () => {
             <div className="w-full border h-0 border-borderCustom"></div>
           </div>
           <div className="flex gap-2">
-            <Button
-              onClick={() => handleLoginWithOAuth("github")}
-              type="submit"
-              className="w-full"
-            >
-              <div className="flex gap-2">
-                <GithubLogo weight="bold" size={20} />
-                <p>GitHub</p>
-              </div>
-            </Button>
-            <Button
-              onClick={() => handleLoginWithOAuth("google")}
-              type="submit"
-              className="w-full"
-            >
-              <div className="flex gap-2">
-                <GoogleLogo weight="bold" size={20} />
-                <p>Google</p>
-              </div>
-            </Button>
+            {registerWithProviderLoading ? (
+              <Button disabled className="w-full">
+                <div className="flex gap-2">
+                  <GithubLogo weight="bold" size={20} />
+                  <p>GitHub</p>
+                </div>
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleLoginWithOAuth("github")}
+                type="submit"
+                className="w-full"
+              >
+                <div className="flex gap-2">
+                  <GithubLogo weight="bold" size={20} />
+                  <p>GitHub</p>
+                </div>
+              </Button>
+            )}
+            {registerWithProviderLoading ? (
+              <Button disabled className="w-full">
+                <div className="flex gap-2">
+                  <GoogleLogo weight="bold" size={20} />
+                  <p>Google</p>
+                </div>
+              </Button>
+            ) : (
+              <Button
+                onClick={() => handleLoginWithOAuth("google")}
+                type="submit"
+                className="w-full"
+              >
+                <div className="flex gap-2">
+                  <GoogleLogo weight="bold" size={20} />
+                  <p>Google</p>
+                </div>
+              </Button>
+            )}
           </div>
           <p className="text-sm mt-5 text-center text-neutral-400 p-2">
             By signing up you agree to our{" "}

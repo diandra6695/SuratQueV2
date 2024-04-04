@@ -15,7 +15,7 @@ import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
-const Page = () => {
+const PasswordResets = () => {
   const router = useRouter();
   const params = useSearchParams();
   const next = params.get("next");
@@ -25,40 +25,30 @@ const Page = () => {
   const formik = useFormik({
     initialValues: {
       email: "",
-      password: "",
     },
     onSubmit: async () => {
-      const { email, password } = formik.values;
+      const { email } = formik.values;
       const supabase = supabaseBrowser();
       setLoginLoading(true);
       try {
-        const { data, error } = await supabase.auth.signInWithPassword({
+        const { data, error } = await supabase.auth.resetPasswordForEmail(
           email,
-          password,
-        });
+          {
+            redirectTo: location.origin + "/auth/update-password",
+          }
+        );
 
         setLoginLoading(false);
         if (error) {
           setLoginError(error.message);
           return;
         }
-        router.push("/dashboard");
       } catch (error) {
         console.error(error);
       }
     },
   });
 
-  const handleLoginWithOAuth = (provider: "github" | "google") => {
-    const supabase = supabaseBrowser();
-
-    supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: location.origin + "/auth/callback?next=" + next,
-      },
-    });
-  };
   const handleFormInput = (e: any) => {
     const { name, value } = e.target;
     formik.setFieldValue(name, value);
@@ -67,8 +57,11 @@ const Page = () => {
     <div className="w-full min-h-screen flex justify-center items-center">
       <Card className="w-[28rem]">
         <CardHeader className="text-center">
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Welcome Back</CardDescription>
+          <CardTitle>Forgot Password?</CardTitle>
+          <CardDescription>
+            Enter the email address you used when you joined and we’ll send you
+            instructions to reset your password.
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -82,62 +75,20 @@ const Page = () => {
               onChange={handleFormInput}
               value={formik.values.email}
             />
-            <Input
-              type="password"
-              placeholder="Password"
-              name="password"
-              onChange={handleFormInput}
-              value={formik.values.password}
-            />
+
             {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
             {loginLoading ? (
               <Button disabled>Please wait</Button>
             ) : (
               <Button type="submit" className="w-full">
                 <div className="flex gap-2">
-                  <p>Sign In</p>
+                  <p>Send Reset Instructions</p>
                 </div>
               </Button>
             )}
-
-            <p className="text-sm">
-              <Link href={"/auth/password_resets"}>
-                <span className="text-primary">Forgot Password?</span>
-              </Link>
-            </p>
           </form>
-          <div className="flex mb-5 items-center">
-            <div className="w-full border h-0 border-borderCustom"></div>
-            <p className="text-sm text-center text-neutral-400 p-2">or</p>
-            <div className="w-full border h-0 border-borderCustom"></div>
-          </div>
-          <div className="flex gap-2">
-            <Button
-              onClick={() => handleLoginWithOAuth("github")}
-              type="submit"
-              className="w-full"
-            >
-              <div className="flex gap-2">
-                <GithubLogo weight="bold" size={20} />
-                <p>GitHub</p>
-              </div>
-            </Button>
-            <Button
-              onClick={() => handleLoginWithOAuth("google")}
-              type="submit"
-              className="w-full"
-            >
-              <div className="flex gap-2">
-                <GoogleLogo weight="bold" size={20} />
-                <p>Google</p>
-              </div>
-            </Button>
-          </div>
           <p className="text-sm mt-5 text-center text-neutral-400 p-2">
-            {"Don't"} have an account?{" "}
-            <Link href={"/auth/signup"}>
-              <span className="text-primary">Sign Up</span>
-            </Link>
+            {"Don't"} have an account?
           </p>
         </CardContent>
       </Card>
@@ -145,4 +96,4 @@ const Page = () => {
   );
 };
 
-export default Page;
+export default PasswordResets;
