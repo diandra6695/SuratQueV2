@@ -10,9 +10,11 @@ import {
 import { Input } from "@/components/ui/input";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useFormik } from "formik";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const UpdatePassword = () => {
+  const router = useRouter();
   const [loginError, setLoginError] = useState<string | null>(null);
   const [loginLoading, setLoginLoading] = useState(false);
   const [confirm, setConfirm] = useState(true);
@@ -36,6 +38,7 @@ const UpdatePassword = () => {
           setLoginError(error.message);
           return;
         }
+        router.push("/auth/signup/verification");
       } catch (error) {
         console.error(error);
       }

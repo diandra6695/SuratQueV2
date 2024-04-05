@@ -12,10 +12,11 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useFormik } from "formik";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
 
 const Page = () => {
+  const router = useRouter();
   const [signUpError, setSignUpError] = useState<string | null>(null);
   const [registerWithEmailLoading, setRegisterWithEmailLoading] =
     useState(false);
@@ -64,7 +65,7 @@ const Page = () => {
           };
 
         setRegisterWithEmailLoading(false);
-
+        router.push("/auth/signup/verification");
         if (authError !== null) {
           setSignUpError(authError.message);
           return;
