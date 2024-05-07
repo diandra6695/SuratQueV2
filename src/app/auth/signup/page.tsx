@@ -8,6 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { useCreateUser } from "@/features/user/useCreateUser";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { GithubLogo, GoogleLogo } from "@phosphor-icons/react";
 import { useFormik } from "formik";
@@ -24,6 +25,12 @@ const Page = () => {
     useState(false);
   const params = useSearchParams();
   const next = params.get("next");
+
+  const { mutate: createUser } = useCreateUser({
+    onSuccess: () => {
+      router.push("/auth/signup/verification");
+    },
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -64,6 +71,11 @@ const Page = () => {
             message: error.message,
           };
 
+        createUser({
+          name: formik.values.name,
+          email: formik.values.email,
+        });
+
         setRegisterWithEmailLoading(false);
         router.push("/auth/signup/verification");
         if (authError !== null) {
@@ -71,6 +83,7 @@ const Page = () => {
           return;
         }
       } catch (error) {
+        //sementara
         console.error(error);
       }
     },
