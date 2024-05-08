@@ -57,6 +57,7 @@ const Organization = () => {
       const { name } = formik.values;
       const type_organization = form.getValues("type");
       createOrganization({
+        user_id: 1,
         name,
         type_organization,
       });
@@ -67,8 +68,8 @@ const Organization = () => {
     formik.setFieldValue(name, value);
   };
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Card>
+    <div className="">
+      <div>
         <CardHeader>
           <CardTitle>Create a new organization</CardTitle>
           <CardDescription>
@@ -122,7 +123,7 @@ const Organization = () => {
             </form>
           </Form>
         </CardContent>
-      </Card>
+      </div>
     </div>
   );
 };

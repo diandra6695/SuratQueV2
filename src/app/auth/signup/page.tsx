@@ -77,11 +77,11 @@ const Page = () => {
         });
 
         setRegisterWithEmailLoading(false);
-        router.push("/auth/signup/verification");
         if (authError !== null) {
           setSignUpError(authError.message);
           return;
         }
+        router.push("/auth/signup/verification");
       } catch (error) {
         //sementara
         console.error(error);
@@ -105,8 +105,8 @@ const Page = () => {
     formik.setFieldValue(name, value);
   };
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Card className="w-[28rem]">
+    <div className="w-full min-h-screen flex justify-center items-center bg-backgroudSecondary">
+      <Card className="w-[28rem] border-none shadow p-2">
         <CardHeader className="text-center">
           <CardTitle>Create New Account</CardTitle>
           <CardDescription>Lets get started</CardDescription>
@@ -117,6 +117,8 @@ const Page = () => {
             onSubmit={formik.handleSubmit}
           >
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="text"
               placeholder="Name"
               name="name"
@@ -124,6 +126,8 @@ const Page = () => {
               value={formik.values.name}
             />
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="email"
               placeholder="Email"
               name="email"
@@ -131,6 +135,8 @@ const Page = () => {
               value={formik.values.email}
             />
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="password"
               placeholder="Password"
               name="password"

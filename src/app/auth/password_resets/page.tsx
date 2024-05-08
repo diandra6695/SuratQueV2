@@ -54,8 +54,8 @@ const PasswordResets = () => {
     formik.setFieldValue(name, value);
   };
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Card className="w-[28rem]">
+    <div className="w-full min-h-screen flex justify-center items-center bg-backgroudSecondary">
+      <Card className="w-[28rem] border-none shadow p-2">
         <CardHeader className="text-center">
           <CardTitle>Forgot Password?</CardTitle>
           <CardDescription>
@@ -69,6 +69,8 @@ const PasswordResets = () => {
             onSubmit={formik.handleSubmit}
           >
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="email"
               placeholder="Email"
               name="email"
@@ -87,9 +89,6 @@ const PasswordResets = () => {
               </Button>
             )}
           </form>
-          <p className="text-sm mt-5 text-center text-neutral-400 p-2">
-            {"Don't"} have an account?
-          </p>
         </CardContent>
       </Card>
     </div>

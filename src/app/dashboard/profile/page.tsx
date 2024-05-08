@@ -1,12 +1,6 @@
 "use client";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import DashboardLayout from "./layout/DashboardLayout";
+import { Card } from "@/components/ui/card";
+import DashboardLayout from "../layout/DashboardLayout";
 import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
@@ -25,7 +19,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Buildings,
   FilePdf,
   PencilSimpleLine,
   Plus,
@@ -62,10 +55,9 @@ import { useCreatePost } from "@/features/post/useCreatePost";
 import { useDeletePost } from "@/features/post/useDeletePost";
 import { toast } from "sonner";
 import { useUpdatePost } from "@/features/post/useUpdatePost";
-import upload from "./utils";
-import useUser from "../auth/hook/useUser";
+import upload from "../utils";
+import useUser from "../../auth/hook/useUser";
 import Link from "next/link";
-import Organization from "./organization/Organization";
 
 const Dashboard = () => {
   const user = useUser();
@@ -236,35 +228,13 @@ const Dashboard = () => {
     });
   };
 
-  const OrganizationNotFound = () => {
-    return (
-      <div className="">
-        <div className="w-full text-foregroundThird h-screen flex flex-col gap-2 justify-center items-center">
-          <Buildings size={150} weight="fill" />
-          <h1 className="text-xl font-semibold">Organizations Not Found</h1>
-          <DialogTrigger>
-            <Button className="p-6 rounded-3xl" variant={"outline"}>
-              Create New
-            </Button>
-          </DialogTrigger>
-          <p className="text-neutral-400 text-sm"></p>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="">
-      <Dialog>
-        <div className="bg-customSecondary">
-          <DashboardLayout>
-            <OrganizationNotFound />
-            <DialogContent>
-              <Organization />
-            </DialogContent>
-          </DashboardLayout>
-        </div>
-      </Dialog>
+      <div className="">
+        <DashboardLayout>
+          <div className=""></div>
+        </DashboardLayout>
+      </div>
     </div>
   );
 };

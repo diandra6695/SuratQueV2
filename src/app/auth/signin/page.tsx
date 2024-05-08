@@ -64,11 +64,13 @@ const Page = () => {
     formik.setFieldValue(name, value);
   };
   return (
-    <div className="w-full min-h-screen flex justify-center items-center">
-      <Card className="w-[28rem]">
+    <div className="w-full min-h-screen flex justify-center items-center bg-backgroudSecondary">
+      <Card className="w-[28rem] border-none shadow p-2">
         <CardHeader className="text-center">
-          <CardTitle>Sign In</CardTitle>
-          <CardDescription>Welcome Back</CardDescription>
+          <CardTitle>Welcome Back!</CardTitle>
+          <CardDescription>
+            Log in to continue access to SuratQue
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <form
@@ -76,6 +78,8 @@ const Page = () => {
             onSubmit={formik.handleSubmit}
           >
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="email"
               placeholder="Email"
               name="email"
@@ -83,6 +87,8 @@ const Page = () => {
               value={formik.values.email}
             />
             <Input
+              required
+              className="bg-backgroudSecondary"
               type="password"
               placeholder="Password"
               name="password"

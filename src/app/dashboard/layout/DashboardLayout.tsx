@@ -5,6 +5,7 @@ import SidebarDashboard from "./components/SidebarDashboard";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import NextNProgress from "nextjs-progressbar";
 
 export default function DashboardLayout({
   children, // will be a page or nested layout
@@ -21,12 +22,12 @@ export default function DashboardLayout({
     );
 
   return (
-    <section>
-      <div className="sidebar">
-        <NavbarDashboard data={data} />
-        <div className="flex bg-white">
-          <SidebarDashboard />
-          <div className="mt-24 container min-h-screen mx-auto z-10 w-full">
+    <section className="">
+      <NextNProgress options={{ showSpinner: false }} />
+      <div className="">
+        <div className="flex">
+          <SidebarDashboard data={data} />
+          <div className="container min-h-screen mx-auto z-10 w-full">
             {children}
           </div>
         </div>
