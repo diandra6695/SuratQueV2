@@ -66,6 +66,7 @@ import upload from "./utils";
 import useUser from "../auth/hook/useUser";
 import Link from "next/link";
 import Organization from "./organization/Organization";
+import DisplaySurat from "./components/DisplaySurat";
 
 const Dashboard = () => {
   const user = useUser();
@@ -256,9 +257,10 @@ const Dashboard = () => {
   return (
     <div className="">
       <Dialog>
-        <div className="bg-customSecondary">
+        <div className="bg-backgroudSecondary">
           <DashboardLayout>
-            <OrganizationNotFound />
+            {/* <OrganizationNotFound /> */}
+            <DisplaySurat />
             <DialogContent>
               <Organization />
             </DialogContent>

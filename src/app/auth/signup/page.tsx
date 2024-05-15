@@ -26,7 +26,7 @@ const Page = () => {
   const params = useSearchParams();
   const next = params.get("next");
 
-  const { mutate: createUser } = useCreateUser({
+  const { mutate: createUser, error: createUserError } = useCreateUser({
     onSuccess: () => {
       router.push("/auth/signup/verification");
     },
@@ -43,6 +43,12 @@ const Page = () => {
       const supabase = supabaseBrowser();
       try {
         setRegisterWithEmailLoading(true);
+        let authError = null;
+        createUser({
+          username: formik.values.name,
+          email: formik.values.email,
+          avatar: "image",
+        });
         const { data, error } = await supabase.auth.signUp({
           email,
           password,
@@ -53,8 +59,6 @@ const Page = () => {
             emailRedirectTo: location.origin + "/dashboard",
           },
         });
-
-        let authError = null;
 
         if (
           data.user &&
@@ -68,14 +72,8 @@ const Page = () => {
         } else if (error)
           authError = {
             name: error.name,
-            message: error.message,
+            message: "error",
           };
-
-        createUser({
-          name: formik.values.name,
-          email: formik.values.email,
-        });
-
         setRegisterWithEmailLoading(false);
         if (authError !== null) {
           setSignUpError(authError.message);

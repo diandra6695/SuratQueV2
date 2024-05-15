@@ -27,6 +27,8 @@ const config = {
         foregroundSec: "#8f8f90",
         foregroundThird: "#c5c6c6",
         colorDark: "#09090b",
+        blueSecondary: "#6c69f3",
+        blueBackground: "#efeffe",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",
