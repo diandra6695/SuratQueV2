@@ -27,7 +27,7 @@ export default function DashboardLayout({
       <div className="">
         <div className="flex">
           <SidebarDashboard data={data} />
-          <div className="container min-h-screen mx-auto z-10 w-full">
+          <div className="container min-h-screen mx-auto z-10 w-full bg-backgroudSecondary">
             {children}
           </div>
         </div>

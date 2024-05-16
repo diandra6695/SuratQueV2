@@ -11,6 +11,7 @@ import {
   Buildings,
   CaretUpDown,
   Check,
+  EnvelopeSimple,
   House,
   Plus,
   User,
@@ -32,7 +33,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
   const year = new Date().getFullYear();
   return (
     <div className="w-[24rem]">
-      <div className="w-[18rem] border-r border-borderCustom fixed z-20 h-screen bg-white border p-5">
+      <div className="w-[18rem] fixed z-20 h-screen bg-white shadow-sm p-5">
         <Link className="" href="/">
           <Image
             className="pointer-events-none mb-5 w-[8rem]"
@@ -47,6 +48,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
             <ul className="flex flex-col gap-2">
               <li>
                 <Button
+                  onClick={() => router.push("/dashboard")}
                   variant="ghost"
                   className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
                 >
@@ -54,6 +56,18 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                     <House size={20} weight="bold" />
                   </div>
                   Dashboard
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => router.push("/surat/create")}
+                  variant="ghost"
+                  className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                >
+                  <div className="bg-colorSecondary p-2 rounded-xl">
+                    <EnvelopeSimple size={20} weight="bold" />
+                  </div>
+                  Tambah Surat
                 </Button>
               </li>
               <li>
