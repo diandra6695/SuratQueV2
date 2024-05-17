@@ -72,6 +72,22 @@
     66%{background-size:calc(100%/3) 100%,calc(100%/3) 100%,calc(100%/3) 0%  }
 }
 
+@keyframes fade {
+  0% {
+      opacity: 1;
+  }
+  50% {
+      opacity: 0.6;
+  }
+  100% {
+      opacity: 1;
+  }
+}
+
+.animated-image {
+  animation: fade 1s infinite;
+}
+
  
 @layer base {
   * {

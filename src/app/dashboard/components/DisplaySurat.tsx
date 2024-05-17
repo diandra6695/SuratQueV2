@@ -8,6 +8,7 @@ import {
 } from "@phosphor-icons/react";
 import { useState } from "react";
 import dayjs from "dayjs";
+import { Skeleton } from "@/components/ui/skeleton";
 
 const DisplaySurat = () => {
   const { isLoading, data: userData } = useUser();
@@ -30,8 +31,21 @@ const DisplaySurat = () => {
   const currentDate = dayjs().locale("id");
   const dayName = currentDate.format("dddd DD, MMMM, YYYY");
 
+  const Load = () => {
+    return (
+      <div className="flex items-center space-x-4">
+        <Skeleton className="h-12 w-12 rounded-full" />
+        <div className="space-y-2">
+          <Skeleton className="h-4 w-[250px]" />
+          <Skeleton className="h-4 w-[200px]" />
+        </div>
+      </div>
+    );
+  };
+
   return (
     <div className="">
+      {isLoading ? <Load /> : null}
       <div className="mt-10">
         <Card className="w-full mb-5 border-none p-5 transition-all">
           <h1 className="text-md font-semibold text-primary">

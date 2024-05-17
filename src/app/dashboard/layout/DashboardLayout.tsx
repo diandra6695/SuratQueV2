@@ -6,6 +6,8 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import NextNProgress from "nextjs-progressbar";
+import logoLoader from "../../../../public/assets/images/logo/logoLoader.svg";
+import Image from "next/image";
 
 export default function DashboardLayout({
   children, // will be a page or nested layout
@@ -17,7 +19,12 @@ export default function DashboardLayout({
   if (isFetching)
     return (
       <div className="min-h-screen w-full flex justify-center items-center">
-        <div className="loader"></div>
+        <Image
+          width={70}
+          src={logoLoader}
+          alt="logoLoader"
+          className="animated-image"
+        />
       </div>
     );
 

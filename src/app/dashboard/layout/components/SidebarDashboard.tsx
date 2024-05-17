@@ -72,6 +72,18 @@ const SidebarDashboard = ({ data }: { data: any }) => {
               </li>
               <li>
                 <Button
+                  onClick={() => router.push("/organization")}
+                  variant="ghost"
+                  className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                >
+                  <div className="bg-colorSecondary p-2 rounded-xl">
+                    <EnvelopeSimple size={20} weight="bold" />
+                  </div>
+                  organization
+                </Button>
+              </li>
+              <li>
+                <Button
                   variant="ghost"
                   className="w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                 >

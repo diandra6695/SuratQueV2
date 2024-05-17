@@ -27,7 +27,7 @@ const SuratCreate = () => {
             Kembali
           </Button>
           <div className="mt-5">
-            <Card className="border-none">
+            <Card className="border-none rounded-xl p-5">
               <CardHeader>
                 <CardTitle className="text-2xl font-semibold">
                   Tambah Surat Baru
@@ -37,7 +37,7 @@ const SuratCreate = () => {
                 <form className="space-y-2">
                   <Select>
                     <p className="text-sm text-foregroundSec">Jenis Surat</p>
-                    <SelectTrigger className="">
+                    <SelectTrigger className="bg-backgroudSecondary">
                       <SelectValue placeholder="Pilih Jenis Surat" />
                     </SelectTrigger>
                     <SelectContent>
@@ -46,24 +46,46 @@ const SuratCreate = () => {
                     </SelectContent>
                   </Select>
                   <p className="text-sm text-foregroundSec">Nomor Surat</p>
-                  <Input type="text" placeholder="Masukkan Nomor Surat"></Input>
+                  <Input
+                    type="text"
+                    placeholder="Masukkan Nomor Surat"
+                    className="bg-backgroudSecondary"
+                  ></Input>
                   <p className="text-sm text-foregroundSec">Tanggal Surat</p>
                   <Input
                     type="date"
-                    className="w-full"
+                    className="w-full bg-backgroudSecondary"
                     placeholder="Masukkan Tanggal Surat"
                   />
                   <p className="text-sm text-foregroundSec">Tanggal Diterima</p>
                   <Input
                     type="date"
-                    className="w-full"
+                    className="w-full bg-backgroudSecondary"
                     placeholder="Masukkan Tanggal Diterima"
                   />
                   <p className="text-sm text-foregroundSec">Perihal</p>
                   <Input
                     type="text"
-                    className="w-full"
+                    className="w-full bg-backgroudSecondary"
                     placeholder="Masukkan Perihal"
+                  />
+                  <p className="text-sm text-foregroundSec">Organisasi</p>
+                  <Input
+                    type="text"
+                    className="w-full bg-backgroudSecondary"
+                    placeholder="Masukkan Organisasi Surat"
+                  />
+                  <p className="text-sm text-foregroundSec">Pengirim</p>
+                  <Input
+                    type="text"
+                    className="w-full bg-backgroudSecondary"
+                    placeholder="Masukkan Pengirim"
+                  />
+                  <p className="text-sm text-foregroundSec">File</p>
+                  <Input
+                    type="file"
+                    className="w-full mb-5 bg-backgroudSecondary"
+                    accept="application/pdf"
                   />
                   <Button
                     type="submit"
