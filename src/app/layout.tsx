@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={GeistSans.className}>
         <QueryProvider>{children}</QueryProvider>
-        <Toaster />
+        <Toaster position="bottom-center" />
       </body>
     </html>
   );

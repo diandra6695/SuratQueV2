@@ -8,6 +8,7 @@ import {
 } from "@/components/ui/popover";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import {
+  Building,
   Buildings,
   CaretUpDown,
   Check,
@@ -50,10 +51,10 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                 <Button
                   onClick={() => router.push("/dashboard")}
                   variant="ghost"
-                  className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
                 >
                   <div className="bg-colorSecondary p-2 rounded-xl">
-                    <House size={20} weight="bold" />
+                    <House size={16} weight="bold" />
                   </div>
                   Dashboard
                 </Button>
@@ -62,10 +63,10 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                 <Button
                   onClick={() => router.push("/surat/create")}
                   variant="ghost"
-                  className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
                 >
                   <div className="bg-colorSecondary p-2 rounded-xl">
-                    <EnvelopeSimple size={20} weight="bold" />
+                    <EnvelopeSimple size={16} weight="bold" />
                   </div>
                   Tambah Surat
                 </Button>
@@ -74,12 +75,12 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                 <Button
                   onClick={() => router.push("/organization")}
                   variant="ghost"
-                  className="w-full p-0 bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
                 >
                   <div className="bg-colorSecondary p-2 rounded-xl">
-                    <EnvelopeSimple size={20} weight="bold" />
+                    <Building size={16} weight="bold" />
                   </div>
-                  organization
+                  Organization
                 </Button>
               </li>
               <li>
@@ -88,7 +89,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                   className="w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                 >
                   <div className="p-2 rounded-xl">
-                    <User size={20} weight="bold" />
+                    <User size={16} weight="bold" />
                   </div>
                   Akun
                 </Button>
