@@ -7,6 +7,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import NextNProgress from "nextjs-progressbar";
 import logoLoader from "../../../../public/assets/images/logo/logoLoader.svg";
+import NextTopLoader from "nextjs-toploader";
 import Image from "next/image";
 
 export default function DashboardLayout({
@@ -30,6 +31,7 @@ export default function DashboardLayout({
 
   return (
     <section className="">
+      <NextTopLoader />
       <NextNProgress options={{ showSpinner: false }} />
       <div className="">
         <div className="flex">

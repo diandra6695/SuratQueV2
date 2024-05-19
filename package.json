@@ -43,6 +43,7 @@
     "next-connect": "^1.0.0",
     "next-themes": "^0.3.0",
     "nextjs-progressbar": "^0.0.16",
+    "nextjs-toploader": "^1.6.12",
     "react": "^18",
     "react-day-picker": "^8.10.1",
     "react-dom": "^18",
