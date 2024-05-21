@@ -8,6 +8,8 @@ import {
 } from "@/components/ui/popover";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import {
+  ArrowCircleLeft,
+  ArrowCircleRight,
   Building,
   Buildings,
   CaretUpDown,
@@ -20,11 +22,73 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 
 const SidebarDashboard = ({ data }: { data: any }) => {
   const queryClient = useQueryClient();
   const router = useRouter();
+  const pathName = usePathname();
+
+  const [isDashboard, setIsDashboard] = useState(false);
+  const [isCreateSurat, setIsCreateSurat] = useState(false);
+  const [isSuratMasuk, setIsSuratMasuk] = useState(false);
+  const [isSuratKeluar, setIsSuratKeluar] = useState(false);
+  const [isOrganization, setIsOrganization] = useState(false);
+  const [isProfile, setIsProfile] = useState(false);
+
+  useEffect(() => {
+    if (pathName === "/dashboard") {
+      setIsDashboard(true);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(false);
+      setIsOrganization(false);
+      setIsProfile(false);
+    } else if (pathName === "/surat/create") {
+      setIsDashboard(false);
+      setIsCreateSurat(true);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(false);
+      setIsOrganization(false);
+      setIsProfile(false);
+    } else if (pathName === "/surat/masuk") {
+      setIsDashboard(false);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(true);
+      setIsSuratKeluar(false);
+      setIsOrganization(false);
+      setIsProfile(false);
+    } else if (pathName === "/surat/keluar") {
+      setIsDashboard(false);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(true);
+      setIsOrganization(false);
+      setIsProfile(false);
+    } else if (pathName === "/organization") {
+      setIsDashboard(false);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(false);
+      setIsOrganization(true);
+      setIsProfile(false);
+    } else if (pathName === "/profile") {
+      setIsDashboard(false);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(false);
+      setIsOrganization(false);
+      setIsProfile(true);
+    } else {
+      setIsDashboard(false);
+      setIsCreateSurat(false);
+      setIsSuratMasuk(false);
+      setIsSuratKeluar(false);
+      setIsOrganization(false);
+      setIsProfile(false);
+    }
+  }, [pathName]);
   const handleLogout = async () => {
     const supabase = supabaseBrowser();
     queryClient.clear();
@@ -51,9 +115,19 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                 <Button
                   onClick={() => router.push("/dashboard")}
                   variant="ghost"
-                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className={
+                    isDashboard
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
                 >
-                  <div className="bg-colorSecondary p-2 rounded-xl">
+                  <div
+                    className={
+                      isDashboard
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
                     <House size={16} weight="bold" />
                   </div>
                   Dashboard
@@ -63,9 +137,19 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                 <Button
                   onClick={() => router.push("/surat/create")}
                   variant="ghost"
-                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className={
+                    isCreateSurat
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
                 >
-                  <div className="bg-colorSecondary p-2 rounded-xl">
+                  <div
+                    className={
+                      isCreateSurat
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
                     <EnvelopeSimple size={16} weight="bold" />
                   </div>
                   Tambah Surat
@@ -73,11 +157,65 @@ const SidebarDashboard = ({ data }: { data: any }) => {
               </li>
               <li>
                 <Button
+                  onClick={() => router.push("/surat/masuk")}
+                  variant="ghost"
+                  className={
+                    isSuratMasuk
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
+                >
+                  <div
+                    className={
+                      isSuratMasuk
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
+                    <ArrowCircleRight size={16} weight="bold" />
+                  </div>
+                  Surat Masuk
+                </Button>
+              </li>
+              <li>
+                <Button
+                  onClick={() => router.push("/surat/keluar")}
+                  variant="ghost"
+                  className={
+                    isSuratKeluar
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
+                >
+                  <div
+                    className={
+                      isSuratKeluar
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
+                    <ArrowCircleLeft size={16} weight="bold" />
+                  </div>
+                  Surat Keluar
+                </Button>
+              </li>
+              <li>
+                <Button
                   onClick={() => router.push("/organization")}
                   variant="ghost"
-                  className="w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start "
+                  className={
+                    isOrganization
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
                 >
-                  <div className="bg-colorSecondary p-2 rounded-xl">
+                  <div
+                    className={
+                      isOrganization
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
                     <Building size={16} weight="bold" />
                   </div>
                   Organization
