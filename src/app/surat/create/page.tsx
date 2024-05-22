@@ -35,7 +35,7 @@ const SuratCreate = () => {
               </CardHeader>
               <CardContent>
                 <form className="space-y-2">
-                  <Select>
+                  <Select onValueChange={(value) => console.log(value)}>
                     <p className="text-sm text-foregroundSec">Jenis Surat</p>
                     <SelectTrigger className="bg-backgroudSecondary">
                       <SelectValue placeholder="Pilih Jenis Surat" />

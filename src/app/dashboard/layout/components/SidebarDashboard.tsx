@@ -128,7 +128,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <House size={16} weight="bold" />
+                    <House size={20} />
                   </div>
                   Dashboard
                 </Button>
@@ -150,7 +150,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <EnvelopeSimple size={16} weight="bold" />
+                    <EnvelopeSimple size={20} />
                   </div>
                   Tambah Surat
                 </Button>
@@ -172,7 +172,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <ArrowCircleRight size={16} weight="bold" />
+                    <ArrowCircleRight size={20} />
                   </div>
                   Surat Masuk
                 </Button>
@@ -194,7 +194,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <ArrowCircleLeft size={16} weight="bold" />
+                    <ArrowCircleLeft size={20} />
                   </div>
                   Surat Keluar
                 </Button>
@@ -216,20 +216,31 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <Building size={16} weight="bold" />
+                    <Building size={20} />
                   </div>
                   Organization
                 </Button>
               </li>
               <li>
                 <Button
+                  onClick={() => router.push("/profile")}
                   variant="ghost"
-                  className="w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  className={
+                    isProfile
+                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
+                  }
                 >
-                  <div className="p-2 rounded-xl">
-                    <User size={16} weight="bold" />
+                  <div
+                    className={
+                      isProfile
+                        ? "bg-colorSecondary p-2 rounded-xl"
+                        : "p-2 rounded-xl"
+                    }
+                  >
+                    <User size={20} />
                   </div>
-                  Akun
+                  Profile
                 </Button>
               </li>
             </ul>
