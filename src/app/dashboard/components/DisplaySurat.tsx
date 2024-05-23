@@ -9,12 +9,14 @@ import {
 import { useState } from "react";
 import dayjs from "dayjs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useRouter } from "next/navigation";
 
 const DisplaySurat = () => {
   const { isLoading, data: userData } = useUser();
   const [isHoverSuratMasuk, setIsHoverSuratMasuk] = useState(false);
   const [isHoverSuratKeluar, setIsHoverSuratKeluar] = useState(false);
 
+  const router = useRouter();
   const getCurrentGreeting = () => {
     const currentHour = new Date().getHours();
 
@@ -70,6 +72,7 @@ const DisplaySurat = () => {
               <h1 className="text-4xl font-bold">100</h1>
               <div className="mt-5">
                 <Button
+                  onClick={() => router.push("/surat/masuk")}
                   variant="outline"
                   className={`rounded-3xl flex gap-1 ${
                     isHoverSuratMasuk
@@ -98,6 +101,7 @@ const DisplaySurat = () => {
               <h1 className="text-4xl font-bold">100</h1>
               <div className="mt-5">
                 <Button
+                  onClick={() => router.push("/surat/keluar")}
                   variant="outline"
                   className={`rounded-3xl flex gap-1 ${
                     isHoverSuratKeluar

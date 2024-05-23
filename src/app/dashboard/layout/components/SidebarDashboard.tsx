@@ -18,6 +18,7 @@ import {
   House,
   Plus,
   User,
+  UserCircle,
 } from "@phosphor-icons/react";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
@@ -238,7 +239,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         : "p-2 rounded-xl"
                     }
                   >
-                    <User size={20} />
+                    <UserCircle size={20} />
                   </div>
                   Profile
                 </Button>
