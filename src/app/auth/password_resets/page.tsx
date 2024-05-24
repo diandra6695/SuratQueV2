@@ -14,6 +14,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import * as Yup from "yup";
 
 const PasswordResets = () => {
   const router = useRouter();
@@ -26,6 +27,11 @@ const PasswordResets = () => {
     initialValues: {
       email: "",
     },
+    validationSchema: Yup.object({
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required!"),
+    }),
     onSubmit: async () => {
       const { email } = formik.values;
       const supabase = supabaseBrowser();
@@ -69,7 +75,7 @@ const PasswordResets = () => {
             onSubmit={formik.handleSubmit}
           >
             <Input
-              required
+              // required
               className="bg-backgroudSecondary"
               type="email"
               placeholder="Email"
@@ -77,6 +83,9 @@ const PasswordResets = () => {
               onChange={handleFormInput}
               value={formik.values.email}
             />
+            {formik.errors.email && formik.touched.email && (
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
+            )}
 
             {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
             {loginLoading ? (

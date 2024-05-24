@@ -15,6 +15,7 @@ import { useFormik } from "formik";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
+import * as Yup from "yup";
 
 const Page = () => {
   const router = useRouter();
@@ -38,6 +39,19 @@ const Page = () => {
       email: "",
       password: "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Name is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
+      password: Yup.string()
+        .min(8, "Minimum 8 characters")
+        .matches(
+          /^(?=.*[A-Z])(?=.*\d).+$/,
+          "Password must contain at least one number and one uppercase letter."
+        )
+        .required("Password is required"),
+    }),
     onSubmit: async () => {
       const { email, password } = formik.values;
       const supabase = supabaseBrowser();
