@@ -12,6 +12,7 @@ import { supabaseBrowser } from "@/lib/supabase/browser";
 import { useFormik } from "formik";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import * as Yup from "yup";
 
 const UpdatePassword = () => {
   const router = useRouter();
@@ -24,6 +25,14 @@ const UpdatePassword = () => {
       password: "",
       confirmPassword: "",
     },
+    validationSchema: Yup.object({
+      password: Yup.string()
+        .required("Password is required!")
+        .min(8, "Password minimum 8 character"),
+      confirmPassword: Yup.string()
+        .required("Confirm password is required!")
+        .oneOf([Yup.ref("password"), ""], "Password not match"),
+    }),
     onSubmit: async () => {
       const { confirmPassword } = formik.values;
       const supabase = supabaseBrowser();
@@ -38,7 +47,7 @@ const UpdatePassword = () => {
           setLoginError(error.message);
           return;
         }
-        router.push("/auth/signup/verification");
+        router.push("/dashboard");
       } catch (error) {
         console.error(error);
       }
@@ -69,6 +78,9 @@ const UpdatePassword = () => {
               onChange={handleFormInput}
               value={formik.values.password}
             />
+            {formik.errors.password && formik.touched.password && (
+              <p className="text-red-500 text-sm">{formik.errors.password}</p>
+            )}
             <Input
               type="password"
               placeholder="Confirm Password"
@@ -76,13 +88,14 @@ const UpdatePassword = () => {
               onChange={handleFormInput}
               value={formik.values.confirmPassword}
             />
-
+            {formik.errors.confirmPassword &&
+              formik.touched.confirmPassword && (
+                <p className="text-red-500 text-sm">
+                  {formik.errors.confirmPassword}
+                </p>
+              )}
             {loginError && <p className="text-red-500 text-sm">{loginError}</p>}
-            {formik.values.password == formik.values.confirmPassword ? (
-              " "
-            ) : (
-              <p className="text-red-500 text-sm">Password not match</p>
-            )}
+
             {loginLoading ? (
               <Button disabled>Please wait</Button>
             ) : (

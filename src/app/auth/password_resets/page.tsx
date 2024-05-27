@@ -44,6 +44,8 @@ const PasswordResets = () => {
           }
         );
 
+        router.push("/auth/password_resets/verification");
+
         setLoginLoading(false);
         if (error) {
           setLoginError(error.message);

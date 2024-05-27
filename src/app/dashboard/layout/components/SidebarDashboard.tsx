@@ -23,7 +23,8 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const SidebarDashboard = ({ data }: { data: any }) => {
@@ -94,7 +95,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
     const supabase = supabaseBrowser();
     queryClient.clear();
     await supabase.auth.signOut();
-    router.push("/");
+    window.location.href = "/";
   };
   const year = new Date().getFullYear();
   return (

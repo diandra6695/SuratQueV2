@@ -41,9 +41,6 @@ const Page = () => {
     },
     validationSchema: Yup.object({
       name: Yup.string().required("Name is required"),
-      email: Yup.string()
-        .email("Invalid email address")
-        .required("Email is required"),
       password: Yup.string()
         .min(8, "Minimum 8 characters")
         .matches(
@@ -51,6 +48,9 @@ const Page = () => {
           "Password must contain at least one number and one uppercase letter."
         )
         .required("Password is required"),
+      email: Yup.string()
+        .email("Invalid email address")
+        .required("Email is required"),
     }),
     onSubmit: async () => {
       const { email, password } = formik.values;
@@ -129,7 +129,6 @@ const Page = () => {
             onSubmit={formik.handleSubmit}
           >
             <Input
-              required
               className="bg-backgroudSecondary"
               type="text"
               placeholder="Name"
@@ -137,8 +136,10 @@ const Page = () => {
               onChange={handleFormInput}
               value={formik.values.name}
             />
+            {formik.errors.name && formik.touched.name && (
+              <p className="text-red-500 text-sm">{formik.errors.name}</p>
+            )}
             <Input
-              required
               className="bg-backgroudSecondary"
               type="email"
               placeholder="Email"
@@ -146,8 +147,10 @@ const Page = () => {
               onChange={handleFormInput}
               value={formik.values.email}
             />
+            {formik.errors.email && formik.touched.email && (
+              <p className="text-red-500 text-sm">{formik.errors.email}</p>
+            )}
             <Input
-              required
               className="bg-backgroudSecondary"
               type="password"
               placeholder="Password"
@@ -155,6 +158,9 @@ const Page = () => {
               onChange={handleFormInput}
               value={formik.values.password}
             />
+            {formik.errors.password && formik.touched.password && (
+              <p className="text-red-500 text-sm">{formik.errors.password}</p>
+            )}
             {signUpError && (
               <p className="text-red-500 text-sm">{signUpError}</p>
             )}
