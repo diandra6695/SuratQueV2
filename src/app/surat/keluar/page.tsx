@@ -20,8 +20,23 @@ import {
 import { PopoverTrigger } from "@radix-ui/react-popover";
 import CardSurat from "../components/card/CardSurat";
 import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { useGetSurat } from "@/features/surat/useGetSurat";
 
 const SuratKeluar = () => {
+  const [idOrganization, setIdOrganization] = useState("");
+  useEffect(() => {
+    const idOrganization = localStorage.getItem("id");
+    setIdOrganization(idOrganization ? String(idOrganization) : "0");
+  }, []);
+
+  const { data: suratData, isLoading: suratIsLoading } = useGetSurat(
+    idOrganization || ""
+  );
+  const data = suratData ? suratData.data : [];
+  const suratMasuk = data.filter(
+    (suratData: any) => suratData.jenis_surat === "surat keluar"
+  );
   const router = useRouter();
 
   const SuratNotFound = () => {
@@ -58,13 +73,12 @@ const SuratKeluar = () => {
               <Plus size={16} /> Tambah
             </Button>
           </div>
-          <SuratNotFound />
-          {/* <div className="grid grid-cols-3 gap-5">
-            <CardSurat />
-            <CardSurat />
-            <CardSurat />
-            <CardSurat />
-          </div> */}
+          {/* <SuratNotFound /> */}
+          <div className="grid grid-cols-3 gap-5 mb-10">
+            {suratMasuk.map((surat: any) => (
+              <CardSurat key={surat.id} surat={surat} />
+            ))}
+          </div>
         </div>
       </DashboardLayout>
     </div>

@@ -26,6 +26,12 @@ import { z } from "zod";
 import { Form, FormField } from "@/components/ui/form";
 import { useCreateOrganization } from "@/features/organization/useCreateOrganization";
 import { redirect, useRouter } from "next/navigation";
+import useUser from "@/app/auth/hook/useUser";
+import { useGetUser } from "@/features/user/useGetUser";
+import { toast } from "sonner";
+import { useQuery } from "@tanstack/react-query";
+import { useGetOrganization } from "@/features/organization/useGetOrganization";
+import * as Yup from "yup";
 
 const FormSchema = z.object({
   type: z
@@ -35,16 +41,33 @@ const FormSchema = z.object({
     .email(),
 });
 const Organization = () => {
+  const { data, isLoading } = useUser();
   const router = useRouter();
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   });
 
-  const { mutate: createOrganization } = useCreateOrganization({
+  const userEmail = data?.email;
+
+  const { data: userFromDatabase, isLoading: getUserFromDatabaseIsLoading } =
+    useGetUser();
+
+  const userSec = userFromDatabase?.data.user;
+
+  // filter userSec mach with userName
+  const filteredUser = getUserFromDatabaseIsLoading
+    ? []
+    : userSec?.filter((user: any) => user.email === userEmail);
+
+  const idUserFromDatabase = filteredUser[0]?.id;
+  const { refetch: refetchOrganization } =
+    useGetOrganization(idUserFromDatabase);
+
+  const { mutate: createOrganization, isPending } = useCreateOrganization({
     onSuccess: () => {
-      console.log("success");
       formik.resetForm();
-      router.push("/dashboard");
+      toast.success("Organization created successfully");
+      refetchOrganization();
     },
   });
 
@@ -53,11 +76,14 @@ const Organization = () => {
       name: "",
       type: "",
     },
+    validationSchema: Yup.object({
+      name: Yup.string().required("Please enter a name"),
+    }),
     onSubmit: async () => {
       const { name } = formik.values;
       const type_organization = form.getValues("type");
       createOrganization({
-        user_id: 1,
+        user_id: idUserFromDatabase,
         name,
         type_organization,
       });
@@ -70,7 +96,7 @@ const Organization = () => {
   return (
     <div className="">
       <div>
-        <CardHeader>
+        <CardHeader className="text-center">
           <CardTitle>Create a new organization</CardTitle>
           <CardDescription>
             For example, you can use the name of your company or department.
@@ -89,6 +115,9 @@ const Organization = () => {
                 placeholder="Organization Name"
                 name="name"
               />
+              {formik.errors.name && formik.touched.name && (
+                <p className="text-red-500 text-sm">{formik.errors.name}</p>
+              )}
               <Label htmlFor="type">Type of organization</Label>
               <FormField
                 control={form.control}
@@ -114,12 +143,19 @@ const Organization = () => {
                   </Select>
                 )}
               />
-
-              <Button type="submit" className="w-full">
-                <div className="flex gap-2">
-                  <p>next</p>
-                </div>
-              </Button>
+              {isPending ? (
+                <Button disabled className="w-full">
+                  <div className="flex gap-2">
+                    <p>Loading...</p>
+                  </div>
+                </Button>
+              ) : (
+                <Button type="submit" className="w-full">
+                  <div className="flex gap-2">
+                    <p>Create</p>
+                  </div>
+                </Button>
+              )}
             </form>
           </Form>
         </CardContent>

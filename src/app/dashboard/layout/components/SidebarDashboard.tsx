@@ -1,6 +1,7 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
+import { Dialog } from "@/components/ui/dialog";
 import {
   Popover,
   PopoverContent,
@@ -22,6 +23,11 @@ import {
   User,
   UserCircle,
 } from "@phosphor-icons/react";
+import {
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@radix-ui/react-dialog";
 import { useQueryClient } from "@tanstack/react-query";
 import Image from "next/image";
 import Link from "next/link";
@@ -29,6 +35,7 @@ import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
 
 import { useEffect, useState } from "react";
+import Organization from "../../organization/Organization";
 
 const SidebarDashboard = ({ data }: { data: any }) => {
   const queryClient = useQueryClient();
@@ -346,9 +353,14 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                         }
                       )}
                       <div className="">
-                        <Button className="rounded-full p-2.5">
-                          <Plus size={20} />
-                        </Button>
+                        <DialogTrigger>
+                          <Button className="rounded-full p-2.5">
+                            <Plus size={20} />
+                          </Button>
+                        </DialogTrigger>
+                        <DialogContent className="p-0">
+                          <Organization />
+                        </DialogContent>
                       </div>
                     </div>
                   </PopoverContent>

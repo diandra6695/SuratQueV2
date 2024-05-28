@@ -274,7 +274,9 @@ const Dashboard = () => {
       <Dialog>
         <div className="bg-backgroudSecondary">
           <DashboardLayout>
-            {organization?.length > 0 ? (
+            {isLoading ? (
+              "Loading..."
+            ) : organization?.length > 0 ? (
               <DisplaySurat idUser={idUserFromDatabase} />
             ) : (
               <OrganizationNotFound />

@@ -9,6 +9,7 @@ import NextNProgress from "nextjs-progressbar";
 import logoLoader from "../../../../public/assets/images/logo/logoLoader.svg";
 import NextTopLoader from "nextjs-toploader";
 import Image from "next/image";
+import { Dialog } from "@/components/ui/dialog";
 
 export default function DashboardLayout({
   children, // will be a page or nested layout
@@ -43,10 +44,12 @@ export default function DashboardLayout({
       /> */}
       <div className="">
         <div className="flex">
-          <SidebarDashboard data={data} />
-          <div className="container min-h-screen mx-auto z-10 w-full bg-backgroudSecondary">
-            {children}
-          </div>
+          <Dialog>
+            <SidebarDashboard data={data} />
+            <div className="container min-h-screen mx-auto z-10 w-full bg-backgroudSecondary">
+              {children}
+            </div>
+          </Dialog>
         </div>
       </div>
     </section>

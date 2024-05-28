@@ -12,6 +12,7 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useDeleteSurat } from "@/features/surat/useDeleteSurat";
 import {
   ArrowRight,
   DotsThreeCircleVertical,
@@ -22,8 +23,17 @@ import {
 } from "@phosphor-icons/react";
 import { useState } from "react";
 
-const CardSurat = ({ data }: any) => {
+const CardSurat = ({ surat }: any) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { mutate: handleDeleteSurat } = useDeleteSurat({
+    onSuccess: () => {
+      // router.push("/surat");
+    },
+  });
+  console.log(surat);
+  const tanggalSuratModifed = new Date(surat.tanggal_surat).toLocaleDateString(
+    "id-ID"
+  );
   return (
     <Card
       className="w-full border-none"
@@ -33,7 +43,7 @@ const CardSurat = ({ data }: any) => {
       <CardHeader className="">
         <div className="flex justify-between">
           <Badge variant="secondary" className="h-5">
-            Surat Masuk
+            {surat.jenis_surat}
           </Badge>
           <div className="">
             <Popover>
@@ -67,36 +77,27 @@ const CardSurat = ({ data }: any) => {
           <div className="grid grid-cols-2 text-xs gap-5">
             <div className="">
               <p className="text-foregroundSec mb-2">Nomor Surat</p>
-              <p className="text-sm">SRT/0001/278/SP000</p>
+              <p className="text-sm">{surat.no_surat}</p>
             </div>
             <div className="">
               <p className="text-foregroundSec mb-2">Perihal</p>
               <p className="text-sm h-12 overflow-hidden whitespace-nowrap text-ellipsis">
-                undangan pertemuan kepala se smk jepara
+                {surat.perihal}
               </p>
             </div>
             <div className="">
               <p className="text-foregroundSec mb-2">Tanggal Surat</p>
-              <p className="text-sm">10/8/2025</p>
+              <p className="text-sm">{tanggalSuratModifed}</p>
             </div>
             <div className="">
               <p className="text-foregroundSec mb-2">Organisasi</p>
-              <p className="text-sm">Pencinta Pop Punk</p>
+              <p className="text-sm">{surat.organisasi}</p>
             </div>
           </div>
         </div>
       </CardContent>
       <CardFooter>
         <div className="flex justify-end w-full gap-2">
-          <Button
-            className={
-              isHovered
-                ? "bg-backgroudSecondary h-10 w-10 p-1 hover:bg-backgroudSecondary  rounded-full text-black"
-                : "bg-backgroudSecondary h-10 w-10 p-1 hover:bg-backgroudSecondary text-foregroundSec rounded-full hover:text-black"
-            }
-          >
-            <ShareNetwork size={16} />
-          </Button>
           <Button
             className={
               isHovered
