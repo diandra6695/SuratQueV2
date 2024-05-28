@@ -6,6 +6,8 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
+import { useGetOrganization } from "@/features/organization/useGetOrganization";
+import { useGetUser } from "@/features/user/useGetUser";
 import { supabaseBrowser } from "@/lib/supabase/browser";
 import {
   ArrowCircleLeft,
@@ -25,6 +27,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "next/navigation";
+
 import { useEffect, useState } from "react";
 
 const SidebarDashboard = ({ data }: { data: any }) => {
@@ -38,6 +41,26 @@ const SidebarDashboard = ({ data }: { data: any }) => {
   const [isSuratKeluar, setIsSuratKeluar] = useState(false);
   const [isOrganization, setIsOrganization] = useState(false);
   const [isProfile, setIsProfile] = useState(false);
+
+  const userEmail = data?.email;
+
+  const { data: userFromDatabase, isLoading: getUserFromDatabaseIsLoading } =
+    useGetUser();
+
+  const userSec = userFromDatabase?.data.user;
+
+  // filter userSec mach with userName
+  const filteredUser = getUserFromDatabaseIsLoading
+    ? []
+    : userSec?.filter((user: any) => user.email === userEmail);
+
+  const idUserFromDatabase = filteredUser[0]?.id;
+  const { data: organization, isLoading: organizationIsLoading } =
+    useGetOrganization(idUserFromDatabase || "");
+
+  const organizations = organization?.data.organization
+    ? organization?.data.organization
+    : "";
 
   useEffect(() => {
     if (pathName === "/dashboard") {
@@ -97,6 +120,14 @@ const SidebarDashboard = ({ data }: { data: any }) => {
     await supabase.auth.signOut();
     window.location.href = "/";
   };
+  const handleOrgClick = (id: any) => {
+    localStorage.setItem("id", id);
+    window.location.reload();
+  };
+
+  const initial = userEmail.slice(0, 1).toUpperCase();
+  // console.log(localStorage.getItem("id"));
+  const sessionId = localStorage.getItem("id");
   const year = new Date().getFullYear();
   return (
     <div className="w-[24rem]">
@@ -252,8 +283,8 @@ const SidebarDashboard = ({ data }: { data: any }) => {
               <Card className="p-2 bg-customSecondary border-0">
                 <div className="flex gap-3">
                   <Avatar>
-                    <AvatarImage src={data.image_url} alt="@shadcn" />
-                    <AvatarFallback>CN</AvatarFallback>
+                    <AvatarImage src={data.image_url} alt={userEmail} />
+                    <AvatarFallback>{initial}</AvatarFallback>
                   </Avatar>
                   <div className="text-sm">
                     <p className="font-medium">{data.display_name}</p>
@@ -273,34 +304,55 @@ const SidebarDashboard = ({ data }: { data: any }) => {
                   <div className="flex items-center p-2 border bg-customSecondary rounded-3xl justify-between">
                     <div className="flex gap-3 items-center">
                       <Buildings size={15} />
-                      <p>Select Organization</p>
+                      <p>
+                        {organizationIsLoading
+                          ? "Loading..."
+                          : "Select Organization"}
+                      </p>
                     </div>
                     <CaretUpDown size={15} />
                   </div>
                 </PopoverTrigger>
-                <PopoverContent className="border-0 shadow-md bg-backgroudSecondary">
-                  <h3 className="p-3">Select Organization</h3>
-                  <div className=" flex flex-col gap-2 items-center">
-                    <Button
-                      variant="ghost"
-                      className="w-full text-primary flex justify-between bg-colorSecondary rounded-3xl"
-                    >
-                      <p>SMK Negeri 1 Bangsri</p>
-                      <Check size={15} />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      className="w-full flex justify-between rounded-3xl"
-                    >
-                      <p>init</p>
-                    </Button>
-                    <div className="">
-                      <Button className="rounded-full p-2.5">
-                        <Plus size={20} />
-                      </Button>
+                {organizationIsLoading ? (
+                  ""
+                ) : (
+                  <PopoverContent className="border-0 shadow-md bg-backgroudSecondary">
+                    <h3 className="p-3">Select Organization</h3>
+                    <div className=" flex flex-col gap-2 items-center">
+                      {organization?.data.organization.map(
+                        (data: any, i: any) => {
+                          const id = i;
+                          return (
+                            <>
+                              <Button
+                                key={id}
+                                onClick={() => handleOrgClick(data.id)}
+                                variant="ghost"
+                                className={
+                                  data.id == sessionId
+                                    ? `w-full text-primary flex justify-between bg-colorSecondary rounded-3xl`
+                                    : "bg-white rounded-3xl w-full flex justify-between"
+                                }
+                              >
+                                <p>{data.name}</p>
+                                {data.id == sessionId ? (
+                                  <Check size={15} />
+                                ) : (
+                                  ""
+                                )}
+                              </Button>
+                            </>
+                          );
+                        }
+                      )}
+                      <div className="">
+                        <Button className="rounded-full p-2.5">
+                          <Plus size={20} />
+                        </Button>
+                      </div>
                     </div>
-                  </div>
-                </PopoverContent>
+                  </PopoverContent>
+                )}
               </Popover>
             </div>
             <p className="text-xs text-center font-light pointer-events-none text-neutral-400">

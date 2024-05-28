@@ -68,13 +68,14 @@ import Link from "next/link";
 import Organization from "./organization/Organization";
 import DisplaySurat from "./components/DisplaySurat";
 import { useGetUser } from "@/features/user/useGetUser";
+import NextNProgress from "nextjs-progressbar";
 
 const Dashboard = () => {
+  const [isOrganization, setOrganization] = useState(false);
   const user = useUser();
   const userName = user.data?.display_name;
   const userEmail = user.data?.email;
   const { data: userFromDatabase, isLoading } = useGetUser();
-  const [isOrganization, setOrganization] = useState(false);
 
   const userSec = userFromDatabase?.data.user;
 
@@ -84,7 +85,8 @@ const Dashboard = () => {
     : userSec?.filter((user: any) => user.email === userEmail);
 
   const organization = filteredUser[0]?.organization;
-  console.log(organization);
+  const idUserFromDatabase = filteredUser[0]?.id;
+  // console.log(idUserFromDatabase);
   const [file, setFile]: any = useState<File>();
   const [open, setOpen] = useState(false);
   // const {
@@ -273,7 +275,7 @@ const Dashboard = () => {
         <div className="bg-backgroudSecondary">
           <DashboardLayout>
             {organization?.length > 0 ? (
-              <DisplaySurat />
+              <DisplaySurat idUser={idUserFromDatabase} />
             ) : (
               <OrganizationNotFound />
             )}

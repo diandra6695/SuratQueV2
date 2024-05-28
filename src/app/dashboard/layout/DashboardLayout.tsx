@@ -30,9 +30,17 @@ export default function DashboardLayout({
     );
 
   return (
-    <section className="">
-      <NextTopLoader />
-      <NextNProgress options={{ showSpinner: false }} />
+    <section className="w-full">
+      {/* <NextTopLoader
+        color="#025963"
+        initialPosition={0.08}
+        crawlSpeed={200}
+        height={3}
+        crawl={true}
+        showSpinner={true}
+        easing="ease"
+        shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+      /> */}
       <div className="">
         <div className="flex">
           <SidebarDashboard data={data} />

@@ -3,6 +3,8 @@ import DashboardLayout from "@/app/dashboard/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import NextTopLoader from "nextjs-toploader";
+
 import {
   Select,
   SelectContent,
@@ -17,6 +19,16 @@ const SuratCreate = () => {
   };
   return (
     <div className="bg-backgroudSecondary">
+      {/* <NextTopLoader
+        color="#025963"
+        initialPosition={0.08}
+        crawlSpeed={200}
+        height={3}
+        crawl={true}
+        showSpinner={true}
+        easing="ease"
+        shadow="0 0 10px #2299DD,0 0 5px #2299DD"
+      /> */}
       <DashboardLayout>
         <div className="mt-10">
           <Button

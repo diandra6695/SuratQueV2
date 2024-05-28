@@ -10,12 +10,44 @@ import { useState } from "react";
 import dayjs from "dayjs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useRouter } from "next/navigation";
+import { useGetSurat } from "@/features/surat/useGetSurat";
+import { set } from "date-fns";
+import { Loader2 } from "lucide-react";
 
-const DisplaySurat = () => {
+interface Surat {
+  id: number;
+  no_surat: string;
+  jenis_surat: string;
+  tanggal_surat: string;
+  tanggal_terima: string;
+  perihal: string;
+  organisasi: string;
+  pengirim: string;
+  file: string;
+  organization_id: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
+const DisplaySurat = ({ idUser }: any) => {
   const { isLoading, data: userData } = useUser();
   const [isHoverSuratMasuk, setIsHoverSuratMasuk] = useState(false);
   const [isHoverSuratKeluar, setIsHoverSuratKeluar] = useState(false);
+  // const [isSuratMasuk, setIsSuratMasuk] = useState(null);
+  // const [isSuratKeluar, setIsSuratKeluar] = useState(null);
+  const idOrganization = localStorage.getItem("id");
 
+  const { data: suratData, isLoading: suratIsLoading } = useGetSurat(
+    idOrganization || ""
+  );
+  const data = suratData ? suratData.data : [];
+  const suratMasuk = data.filter(
+    (suratData: any) => suratData.jenis_surat === "surat masuk"
+  );
+  // setIsSuratMasuk(suratMasuk);
+  const suratKeluar = data.filter(
+    (suratData: any) => suratData.jenis_surat === "surat keluar"
+  );
   const router = useRouter();
   const getCurrentGreeting = () => {
     const currentHour = new Date().getHours();
@@ -31,8 +63,8 @@ const DisplaySurat = () => {
     }
   };
   const currentDate = dayjs().locale("id");
-  const dayName = currentDate.format("dddd DD, MMMM, YYYY");
-
+  const dayName = currentDate.format("dddd, DD MMMM YYYY");
+  // console.log();
   const Load = () => {
     return (
       <div className="flex items-center space-x-4">
@@ -69,7 +101,13 @@ const DisplaySurat = () => {
               <h1 className="text-lg font-semibold">Surat Masuk</h1>
             </CardHeader>
             <CardContent className="">
-              <h1 className="text-4xl font-bold">100</h1>
+              <h1 className="text-4xl font-bold">
+                {suratIsLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  suratMasuk.length
+                )}
+              </h1>
               <div className="mt-5">
                 <Button
                   onClick={() => router.push("/surat/masuk")}
@@ -98,7 +136,13 @@ const DisplaySurat = () => {
               <h1 className="text-lg font-semibold">Surat Keluar</h1>
             </CardHeader>
             <CardContent className="">
-              <h1 className="text-4xl font-bold">100</h1>
+              <h1 className="text-4xl font-bold">
+                {suratIsLoading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  suratKeluar.length
+                )}
+              </h1>
               <div className="mt-5">
                 <Button
                   onClick={() => router.push("/surat/keluar")}
