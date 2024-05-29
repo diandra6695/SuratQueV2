@@ -1,4 +1,5 @@
 "use client";
+import useUser from "@/app/auth/hook/useUser";
 import DashboardLayout from "@/app/dashboard/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
@@ -12,6 +13,7 @@ const DetailSurat: React.FC = () => {
   const [id, setId] = useState<string | null>(null);
   const [idIsLoading, setIsLoading] = useState<boolean | null>(false);
   const [idOrganization, setIdOrganization] = useState("");
+  const { data: userData } = useUser();
   useEffect(() => {
     const idOrganization = localStorage.getItem("id");
     setIdOrganization(idOrganization ? String(idOrganization) : "0");
@@ -32,16 +34,21 @@ const DetailSurat: React.FC = () => {
   const handleBackClick = () => {
     window.history.back();
   };
-  const isoDateString = !isLoading ? suratFilter[0].createdAt : "Loading...";
+  const isoDateString = !isLoading ? suratFilter[0]?.createdAt : "Loading...";
 
   const date = new Date(isoDateString);
 
   // Opsi format untuk tanggal Indonesia
-  const handleDownload = ({ fileName }: any) => {
+  const handleDownload = (fileName: any) => {
     const a = document.createElement("a");
-    const fileUrl = "../../../../../public/uploads";
+    const fileUrl = `/uploads/${fileName}`;
     a.href = fileUrl;
-    a.download = fileName;
+    a.download =
+      suratFilter[0]?.jenis_surat +
+      "-" +
+      suratFilter[0]?.perihal +
+      "-" +
+      userData?.display_name;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);

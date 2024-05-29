@@ -220,7 +220,6 @@ const SuratCreate = () => {
                     <p className="text-sm text-foregroundSec">File</p>
                     <Input
                       onChange={(e) => setFile(e.target.files?.[0])}
-                      value={file}
                       name="file"
                       type="file"
                       className="w-full mb-5 bg-backgroudSecondary"
