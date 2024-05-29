@@ -43,7 +43,6 @@ const PasswordResets = () => {
             redirectTo: location.origin + "/auth/update-password",
           }
         );
-
         router.push("/auth/password_resets/verification");
 
         setLoginLoading(false);

@@ -23,6 +23,8 @@ import { useRouter } from "next/navigation";
 import { useGetSurat } from "@/features/surat/useGetSurat";
 import { useEffect, useState } from "react";
 import { AlertDialog } from "@/components/ui/alert-dialog";
+import { Dialog, DialogClose, DialogContent } from "@/components/ui/dialog";
+import { useDeleteSurat } from "@/features/surat/useDeleteSurat";
 
 const SuratMasuk = () => {
   const router = useRouter();
@@ -73,15 +75,19 @@ const SuratMasuk = () => {
               <Plus size={16} /> Tambah
             </Button>
           </div>
-          {/* {suratMasuk.length > 0 ? } */}
-          {/* <SuratNotFound /> */}
-          <div className="grid grid-cols-3 gap-5 mb-10">
-            <AlertDialog>
-              {suratMasuk.map((surat: any) => (
-                <CardSurat key={surat.id} surat={surat} />
-              ))}
-            </AlertDialog>
-          </div>
+          {suratMasuk.length > 0 ? (
+            <div className="grid grid-cols-3 gap-5 mb-10">
+              <Dialog>
+                {suratMasuk.map((surat: any) => (
+                  <>
+                    <CardSurat key={surat.id} jenis={"masuk"} surat={surat} />
+                  </>
+                ))}
+              </Dialog>
+            </div>
+          ) : (
+            <SuratNotFound />
+          )}
         </div>
       </DashboardLayout>
     </div>

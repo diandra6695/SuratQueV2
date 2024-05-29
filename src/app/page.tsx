@@ -21,6 +21,7 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import { Check } from "@phosphor-icons/react";
+import { useEffect, useState } from "react";
 export default function Home() {
   /**
    * Retrieves the current user data and loading state using the `useUser` hook.
@@ -39,6 +40,12 @@ export default function Home() {
     window.location.href = "/";
   };
   const router = useRouter();
+  const [idOrganization, setIdOrganization] = useState("");
+  useEffect(() => {
+    const idOrganization = localStorage.getItem("id");
+    setIdOrganization(idOrganization ? String(idOrganization) : "0");
+  }, []);
+  console.log(idOrganization);
 
   const ButtonLoading = () => {
     return (
@@ -62,7 +69,7 @@ export default function Home() {
         <div className="">
           <ul className="flex gap-9 text-sm font-medium">
             <li>
-              <Link className="bg-backgroudSecondary" href="#">
+              <Link className="bg-backgroudSecondary" href="/contact">
                 Kontak
               </Link>
             </li>
@@ -147,6 +154,11 @@ export default function Home() {
               Platfrom Arsip Surat yang Aman & Cepat
             </h3>
           </div>
+          <Badge variant={"outline"}>
+            <h3 className="text-center text-lg text-primary font-medium">
+              Simpan di SuratQue, cepet, gampang, ora perlu mikir!
+            </h3>
+          </Badge>
           <div className="w-[40rem] text-center">
             <p className="text-lg text-foregroundSec">
               Cocok untuk sekolah, universitas, startup dan perusahaan yang
@@ -154,13 +166,20 @@ export default function Home() {
             </p>
           </div>
           <div className="flex items-center gap-4 ">
-            <Button className="rounded-3xl">Coba Sekarang</Button>
             <Button
-              variant={"secondary"}
-              className="rounded-3xl bg-colorSecondary text-primary"
+              className="rounded-3xl"
+              onClick={() => router.push("/dashboard")}
             >
-              Apa itu SuratQue?
+              Coba Sekarang
             </Button>
+            <Link href="/about">
+              <Button
+                variant={"secondary"}
+                className="rounded-3xl bg-colorSecondary text-primary"
+              >
+                Apa itu SuratQue?
+              </Button>
+            </Link>
           </div>
         </div>
         <div className="h-[45rem]">
@@ -215,7 +234,7 @@ export default function Home() {
               <CardContent className="flex flex-col gap-2"></CardContent>
               <CardFooter>
                 <Button
-                  onClick={() => router.push("/dashboard")}
+                  onClick={() => router.push("/contact")}
                   className="rounded-3xl bg-black hover:bg-gray-800 text-sm"
                 >
                   Hubungi Kami

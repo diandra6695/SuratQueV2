@@ -8,11 +8,17 @@ import {
   CardHeader,
 } from "@/components/ui/card";
 import {
+  DialogClose,
+  DialogContent,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { useDeleteSurat } from "@/features/surat/useDeleteSurat";
+import { useGetSurat } from "@/features/surat/useGetSurat";
 import {
   ArrowRight,
   DotsThreeCircleVertical,
@@ -21,16 +27,29 @@ import {
   ShareNetwork,
   Trash,
 } from "@phosphor-icons/react";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
-const CardSurat = ({ surat }: any) => {
+const CardSurat = ({ surat, jenis }: any) => {
+  const router = useRouter();
   const [isHovered, setIsHovered] = useState(false);
-  const { mutate: handleDeleteSurat } = useDeleteSurat({
-    onSuccess: () => {
-      // router.push("/surat");
-    },
-  });
-  console.log(surat);
+  const [idOrganization, setIdOrganization] = useState("");
+  useEffect(() => {
+    const idOrganization = localStorage.getItem("id");
+    setIdOrganization(idOrganization ? String(idOrganization) : "0");
+  }, []);
+
+  const { refetch: refetchSurat } = useGetSurat(idOrganization || "");
+  const { mutate: handleDeleteSurat, isPending: deleteSuratIsLoading } =
+    useDeleteSurat({
+      onSuccess: () => {
+        refetchSurat();
+        toast.success("Delete surat succes");
+        // router.push("/surat");
+      },
+    });
+
   const tanggalSuratModifed = new Date(surat.tanggal_surat).toLocaleDateString(
     "id-ID"
   );
@@ -53,20 +72,45 @@ const CardSurat = ({ surat }: any) => {
                 </Button>
               </PopoverTrigger>
               <PopoverContent className="p-2 w-32 gap-2 flex items-center justify-center flex-col">
-                <Button
-                  variant={"ghost"}
-                  className="flex gap-2 items-center w-full text-sm text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600"
-                >
-                  <Trash size={20} />
-                  Hapus
-                </Button>
-                <Button
-                  variant={"ghost"}
-                  className="flex gap-2 items-center text-sm w-full "
-                >
-                  <PencilSimpleLine size={20} />
-                  Edit
-                </Button>
+                <DialogTrigger>
+                  <Button
+                    variant={"ghost"}
+                    className="flex gap-2 items-center w-full text-sm text-red-500 bg-red-50 hover:bg-red-100 hover:text-red-600"
+                  >
+                    <Trash size={20} />
+                    Hapus
+                  </Button>
+                </DialogTrigger>
+                <DialogContent>
+                  <div className=" flex flex-col gap-4">
+                    <h3 className="text-xl font-semibold">
+                      Are you absolutely sure?
+                    </h3>
+                    <p className="text-sm text-foregroundSec">
+                      This action cannot be undone. This will permanently delete
+                      your surat and remove your data from our servers.
+                    </p>
+                    <div className="flex gap-5 justify-end">
+                      <DialogClose asChild>
+                        <Button type="button" variant="secondary">
+                          Close
+                        </Button>
+                      </DialogClose>
+                      {!deleteSuratIsLoading ? (
+                        <Button
+                          onClick={() => handleDeleteSurat(surat.id)}
+                          variant={"destructive"}
+                        >
+                          Delete
+                        </Button>
+                      ) : (
+                        <Button disabled variant={"destructive"}>
+                          Loading...
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </DialogContent>
               </PopoverContent>
             </Popover>
           </div>
@@ -99,6 +143,9 @@ const CardSurat = ({ surat }: any) => {
       <CardFooter>
         <div className="flex justify-end w-full gap-2">
           <Button
+            onClick={() =>
+              router.push(`/surat/${jenis}/detail?id=${surat.id_unique}`)
+            }
             className={
               isHovered
                 ? "bg-backgroudSecondary hover:bg-backgroudSecondary rounded-full text-black"

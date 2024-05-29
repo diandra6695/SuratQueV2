@@ -34,7 +34,7 @@ const SuratKeluar = () => {
     idOrganization || ""
   );
   const data = suratData ? suratData.data : [];
-  const suratMasuk = data.filter(
+  const suratKeluar = data.filter(
     (suratData: any) => suratData.jenis_surat === "surat keluar"
   );
   const router = useRouter();
@@ -74,11 +74,15 @@ const SuratKeluar = () => {
             </Button>
           </div>
           {/* <SuratNotFound /> */}
-          <div className="grid grid-cols-3 gap-5 mb-10">
-            {suratMasuk.map((surat: any) => (
-              <CardSurat key={surat.id} surat={surat} />
-            ))}
-          </div>
+          {suratKeluar.length > 0 ? (
+            <div className="grid grid-cols-3 gap-5 mb-10">
+              {suratKeluar.map((surat: any) => (
+                <CardSurat jenis="keluar" key={surat.id} surat={surat} />
+              ))}
+            </div>
+          ) : (
+            <SuratNotFound />
+          )}
         </div>
       </DashboardLayout>
     </div>

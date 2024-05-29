@@ -125,6 +125,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
     const supabase = supabaseBrowser();
     queryClient.clear();
     await supabase.auth.signOut();
+    localStorage.removeItem("id");
     window.location.href = "/";
   };
   const handleOrgClick = (id: any) => {
@@ -132,7 +133,7 @@ const SidebarDashboard = ({ data }: { data: any }) => {
     window.location.reload();
   };
 
-  const initial = userEmail.slice(0, 1).toUpperCase();
+  const initial = userEmail?.slice(0, 1).toUpperCase();
   // console.log(localStorage.getItem("id"));
   const sessionId = localStorage.getItem("id");
   const year = new Date().getFullYear();
@@ -152,136 +153,148 @@ const SidebarDashboard = ({ data }: { data: any }) => {
           <div className="mt-5">
             <ul className="flex flex-col gap-2">
               <li>
-                <Button
-                  onClick={() => router.push("/dashboard")}
-                  variant="ghost"
-                  className={
-                    isDashboard
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/dashboard"}>
+                  <Button
+                    // onClick={() => router.push("/dashboard")}
+                    variant="ghost"
                     className={
                       isDashboard
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <House size={20} />
-                  </div>
-                  Dashboard
-                </Button>
+                    <div
+                      className={
+                        isDashboard
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <House size={20} />
+                    </div>
+                    Dashboard
+                  </Button>
+                </Link>
               </li>
               <li>
-                <Button
-                  onClick={() => router.push("/surat/create")}
-                  variant="ghost"
-                  className={
-                    isCreateSurat
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/surat/create"}>
+                  <Button
+                    // onClick={() => router.push("/surat/create")}
+                    variant="ghost"
                     className={
                       isCreateSurat
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <EnvelopeSimple size={20} />
-                  </div>
-                  Tambah Surat
-                </Button>
+                    <div
+                      className={
+                        isCreateSurat
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <EnvelopeSimple size={20} />
+                    </div>
+                    Tambah Surat
+                  </Button>
+                </Link>
               </li>
               <li>
-                <Button
-                  onClick={() => router.push("/surat/masuk")}
-                  variant="ghost"
-                  className={
-                    isSuratMasuk
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/surat/masuk"}>
+                  <Button
+                    // onClick={() => router.push("/surat/masuk")}
+                    variant="ghost"
                     className={
                       isSuratMasuk
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <ArrowCircleRight size={20} />
-                  </div>
-                  Surat Masuk
-                </Button>
+                    <div
+                      className={
+                        isSuratMasuk
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <ArrowCircleRight size={20} />
+                    </div>
+                    Surat Masuk
+                  </Button>
+                </Link>
               </li>
               <li>
-                <Button
-                  onClick={() => router.push("/surat/keluar")}
-                  variant="ghost"
-                  className={
-                    isSuratKeluar
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/surat/keluar"}>
+                  <Button
+                    // onClick={() => router.push("/surat/keluar")}
+                    variant="ghost"
                     className={
                       isSuratKeluar
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <ArrowCircleLeft size={20} />
-                  </div>
-                  Surat Keluar
-                </Button>
+                    <div
+                      className={
+                        isSuratKeluar
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <ArrowCircleLeft size={20} />
+                    </div>
+                    Surat Keluar
+                  </Button>
+                </Link>
               </li>
               <li>
-                <Button
-                  onClick={() => router.push("/organization")}
-                  variant="ghost"
-                  className={
-                    isOrganization
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/organization"}>
+                  <Button
+                    // onClick={() => router.push("/organization")}
+                    variant="ghost"
                     className={
                       isOrganization
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <Building size={20} />
-                  </div>
-                  Organization
-                </Button>
+                    <div
+                      className={
+                        isOrganization
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <Building size={20} />
+                    </div>
+                    Organization
+                  </Button>
+                </Link>
               </li>
               <li>
-                <Button
-                  onClick={() => router.push("/profile")}
-                  variant="ghost"
-                  className={
-                    isProfile
-                      ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
-                      : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
-                  }
-                >
-                  <div
+                <Link href={"/profile"}>
+                  <Button
+                    // onClick={() => router.push("/profile")}
+                    variant="ghost"
                     className={
                       isProfile
-                        ? "bg-colorSecondary p-2 rounded-xl"
-                        : "p-2 rounded-xl"
+                        ? `w-full p-0 bg-white hover:text-primary hover:bg-white text-primary font-semibold flex items-center gap-2 justify-start `
+                        : "w-full p-0 flex items-center text-foregroundSec hover:bg-white gap-2 justify-start hover:text-colorDark"
                     }
                   >
-                    <UserCircle size={20} />
-                  </div>
-                  Profile
-                </Button>
+                    <div
+                      className={
+                        isProfile
+                          ? "bg-colorSecondary p-2 rounded-xl"
+                          : "p-2 rounded-xl"
+                      }
+                    >
+                      <UserCircle size={20} />
+                    </div>
+                    Profile
+                  </Button>
+                </Link>
               </li>
             </ul>
           </div>

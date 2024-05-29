@@ -47,6 +47,7 @@ model Organization {
 
 model Surat {
   id              Int          @id @default(autoincrement())
+  id_unique       String?      @default(uuid())
   no_surat        String
   jenis_surat     String
   tanggal_surat   String
