@@ -27,6 +27,7 @@ import {
   ShareNetwork,
   Trash,
 } from "@phosphor-icons/react";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -81,6 +82,18 @@ const CardSurat = ({ surat, jenis }: any) => {
                     Hapus
                   </Button>
                 </DialogTrigger>
+                <Link href={`/surat/edit?id=${surat.id_unique}`}>
+                  <Button
+                    variant={"ghost"}
+                    // onClick={() =>
+                    //   router.push(`/surat/${jenis}/detail?id=${surat.id_unique}`)
+                    // }
+                    className="w-full flex gap-4"
+                  >
+                    <PencilSimpleLine size={20} />
+                    Edit
+                  </Button>
+                </Link>
                 <DialogContent>
                   <div className=" flex flex-col gap-4">
                     <h3 className="text-xl font-semibold">
@@ -142,18 +155,20 @@ const CardSurat = ({ surat, jenis }: any) => {
       </CardContent>
       <CardFooter>
         <div className="flex justify-end w-full gap-2">
-          <Button
-            onClick={() =>
-              router.push(`/surat/${jenis}/detail?id=${surat.id_unique}`)
-            }
-            className={
-              isHovered
-                ? "bg-backgroudSecondary hover:bg-backgroudSecondary rounded-full text-black"
-                : "bg-backgroudSecondary hover:bg-backgroudSecondary text-foregroundSec rounded-full hover:text-black"
-            }
-          >
-            Detail {isHovered && <ArrowRight size={14} />}
-          </Button>
+          <Link href={`/surat/${jenis}/detail?id=${surat.id_unique}`}>
+            <Button
+              // onClick={() =>
+              //   router.push(`/surat/${jenis}/detail?id=${surat.id_unique}`)
+              // }
+              className={
+                isHovered
+                  ? "bg-backgroudSecondary hover:bg-backgroudSecondary rounded-full text-black"
+                  : "bg-backgroudSecondary hover:bg-backgroudSecondary text-foregroundSec rounded-full hover:text-black"
+              }
+            >
+              Detail {isHovered && <ArrowRight size={14} />}
+            </Button>
+          </Link>
         </div>
       </CardFooter>
     </Card>

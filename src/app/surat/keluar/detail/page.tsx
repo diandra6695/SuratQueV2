@@ -1,8 +1,10 @@
 "use client";
+import useUser from "@/app/auth/hook/useUser";
 import DashboardLayout from "@/app/dashboard/layout/DashboardLayout";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { useGetSurat } from "@/features/surat/useGetSurat";
+import { FilePdf } from "@phosphor-icons/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -11,6 +13,7 @@ const DetailSurat: React.FC = () => {
   const [id, setId] = useState<string | null>(null);
   const [idIsLoading, setIsLoading] = useState<boolean | null>(false);
   const [idOrganization, setIdOrganization] = useState("");
+  const { data: userData } = useUser();
   useEffect(() => {
     const idOrganization = localStorage.getItem("id");
     setIdOrganization(idOrganization ? String(idOrganization) : "0");
@@ -31,12 +34,25 @@ const DetailSurat: React.FC = () => {
   const handleBackClick = () => {
     window.history.back();
   };
-  const isoDateString = !isLoading ? suratFilter[0].createdAt : "Loading...";
+  const isoDateString = !isLoading ? suratFilter[0]?.createdAt : "Loading...";
 
   const date = new Date(isoDateString);
 
   // Opsi format untuk tanggal Indonesia
-  const options = {};
+  const handleDownload = (fileName: any) => {
+    const a = document.createElement("a");
+    const fileUrl = `/uploads/${fileName}`;
+    a.href = fileUrl;
+    a.download =
+      suratFilter[0]?.jenis_surat +
+      "-" +
+      suratFilter[0]?.perihal +
+      "-" +
+      userData?.display_name;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
 
   const formattedDate = date.toLocaleDateString("id-ID");
   return (
@@ -94,6 +110,17 @@ const DetailSurat: React.FC = () => {
                       Tanggal Pencatatan
                     </h3>
                     <p className="font-medium">{formattedDate}</p>
+                  </div>
+                  <div className="">
+                    <h3 className=" text-sm text-foregroundSec">File</h3>
+                    <Button
+                      variant={"outline"}
+                      onClick={() => handleDownload(suratFilter[0].file)}
+                      className=" flex gap-2"
+                    >
+                      <FilePdf size={22} />
+                      <p className="font-medium">Download</p>
+                    </Button>
                   </div>
                 </div>
               </CardContent>

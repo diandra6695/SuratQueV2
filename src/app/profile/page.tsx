@@ -5,8 +5,12 @@ import { Input } from "@/components/ui/input";
 import useUser from "../auth/hook/useUser";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 const Profile = () => {
+  const handleClick = () => {
+    toast("This feature not avalible yet :)");
+  };
   const { isPending, data } = useUser();
   return (
     <div className="bg-backgroudSecondary">
@@ -42,7 +46,11 @@ const Profile = () => {
               )}
             </div>
             <div className="w-full flex justify-end ">
-              <Button type="submit" className="rounded-3xl w-24">
+              <Button
+                onClick={handleClick}
+                type="submit"
+                className="rounded-3xl w-24"
+              >
                 Simpan
               </Button>
             </div>
